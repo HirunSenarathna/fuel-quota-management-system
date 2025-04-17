@@ -1,6 +1,5 @@
 package com.fqms.fuelquotamanagementsystem.service;
 
-import com.fqms.fuelquotamanagementsystem.Dtos.FuelStationRegistrationRequestDto;
 import com.fqms.fuelquotamanagementsystem.Dtos.VehicleOwnerRegistrationRequestDto;
 
 public interface VehicleOwnerService {
