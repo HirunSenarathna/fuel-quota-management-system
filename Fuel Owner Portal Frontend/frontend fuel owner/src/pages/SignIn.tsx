@@ -6,13 +6,11 @@ import {
   Typography, 
   Container, 
   Paper, 
-  FormControlLabel, 
-  Checkbox, 
   Link,
   CircularProgress, 
   Alert
 } from '@mui/material';
-import bgImage from '../assets/bgimg.jpg';
+import '../styles/SignIn.css';
 
 interface Credentials {
   username: string;
@@ -53,49 +51,23 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundImage: `url(${bgImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        padding: 2
-      }}
-    >
+    <Box className="signin-box">
       <Container component="main" maxWidth="xs">
-        <Paper
-          elevation={3}
-          sx={{
-            p: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '100%',
-            borderRadius: 2,
-            backgroundColor: 'rgba(255, 255, 255, 0.8)', // Add transparency (0.8 opacity)
-            backdropFilter: 'blur(20px)', // Add frosted glass effect
-            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)' // Enhance the glass effect
-          }}
-        >
+        <Paper className="signin-paper">
           <Typography component="h1" variant="h4" fontWeight="bold">
             Sign In
           </Typography>
           <Typography variant="body1" color="text.secondary" mt={1}>
             Welcome back! Please sign in to your account
           </Typography>
-          
+
           {error && (
-            <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
+            <Alert severity="error" className="alert">
               {error}
             </Alert>
           )}
-          
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 3, width: '100%' }}>
+
+          <Box component="form" onSubmit={handleSubmit} noValidate className="form">
             <TextField
               margin="normal"
               required
@@ -108,8 +80,8 @@ const SignIn: React.FC = () => {
               value={credentials.username}
               onChange={handleChange}
             />
-            
-            <Box sx={{ position: 'relative', width: '100%' }}>
+
+            <Box className="link">
               <TextField
                 margin="normal"
                 required
@@ -121,31 +93,26 @@ const SignIn: React.FC = () => {
                 autoComplete="current-password"
                 value={credentials.password}
                 onChange={handleChange}
-              />
-              <Box sx={{ mt: 1 }}>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Box>
+              />              
             </Box>
-            
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-              sx={{ mt: 1 }}
-            />
-            
+
+            <Box>
+              <Link href="#" variant="body2" className='forgot-password-link'>
+                Forgot password?
+              </Link>
+            </Box>
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, py: 1.5 }}
+              className="button"
               disabled={isLoading}
             >
               {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign In'}
             </Button>
-            
-            <Box sx={{ textAlign: 'center' }}>
+
+            <Box className="signup-link">
               <Typography variant="body2">
                 Don't have an account?{' '}
                 <Link href="#" variant="body2">
