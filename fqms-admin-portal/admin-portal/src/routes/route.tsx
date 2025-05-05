@@ -1,24 +1,48 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-//import { ProtectedRoute } from "./ProtectedRoute";
+import React, { Suspense } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+
+// pages
+import Login from "../pages/Login";
+import Dashboard from "../pages/Dashboard";
 
 // layouts
 import AdminLayout from "../layouts/AdminLayout";
 
+// Loading fallback
+const LoadingFallback = () => <div>Loading...</div>;
+
 const Router: React.FC = () => {
   return (
-    <Routes>
-      {/* public routes */}
+    <Suspense fallback={<LoadingFallback />}>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/login" element={<Login />} />
 
-      <Route>
+        {/* Admin routes - wrapped with AdminLayout */}
+        <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+
         <Route
           path="/admin"
-          element={<AdminLayout children={undefined} />}
-        ></Route>
-      </Route>
+          element={
+            <AdminLayout>
+              <Navigate to="/admin/dashboard" replace />
+            </AdminLayout>
+          }
+        />
 
-      {/* Protected Routes */}
-    </Routes>
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminLayout>
+              <Dashboard />
+            </AdminLayout>
+          }
+        />
+
+        {/* Catch-all route - redirect to dashboard */}
+        <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
+      </Routes>
+    </Suspense>
   );
 };
 

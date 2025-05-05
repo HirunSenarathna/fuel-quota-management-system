@@ -1,28 +1,29 @@
 import React from "react";
 import { ConfigProvider, theme } from "antd";
+import { BrowserRouter } from "react-router-dom";
 import Router from "./routes/route";
 
 const App: React.FC = () => {
   return (
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: "#00b96b",
-          borderRadius: 4,
-          // You can customize more token variables here
-        },
-        components: {
-          Button: {
+    <BrowserRouter>
+      <ConfigProvider
+        theme={{
+          token: {
             colorPrimary: "#00b96b",
-            algorithm: true, // Enable algorithm
+            borderRadius: 4,
           },
-          // You can customize other components here
-        },
-        algorithm: theme.defaultAlgorithm, // or theme.darkAlgorithm for dark mode
-      }}
-    >
-      <Router />
-    </ConfigProvider>
+          components: {
+            Button: {
+              colorPrimary: "#00b96b",
+              algorithm: true,
+            },
+          },
+          algorithm: theme.defaultAlgorithm,
+        }}
+      >
+        <Router />
+      </ConfigProvider>
+    </BrowserRouter>
   );
 };
 
