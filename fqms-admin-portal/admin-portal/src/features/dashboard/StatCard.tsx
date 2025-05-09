@@ -45,7 +45,7 @@ const StatCard: React.FC<StatCardProps> = ({
     );
 
   return (
-    <Card bordered={false} size="small">
+    <Card variant="borderless" size="small">
       <Statistic
         title={title}
         value={value}

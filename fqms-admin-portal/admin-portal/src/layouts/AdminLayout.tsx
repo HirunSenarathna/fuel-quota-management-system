@@ -6,6 +6,8 @@ import {
   CarOutlined,
   SettingOutlined,
   LogoutOutlined,
+  HomeOutlined,
+  FundOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme, Button, Dropdown, Space, Avatar } from "antd";
 
@@ -29,10 +31,10 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       onClick: () => navigate("/admin/dashboard"),
     },
     {
-      key: "users",
-      icon: <UserOutlined />,
-      label: "Users",
-      onClick: () => navigate("/admin/users"),
+      key: "stations",
+      icon: <HomeOutlined />,
+      label: "Stations",
+      onClick: () => navigate("/admin/stations"),
     },
     {
       key: "vehicles",
@@ -42,7 +44,9 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     },
     {
       key: "quotas",
+      icon: <FundOutlined />,
       label: "Fuel Quotas",
+
       onClick: () => navigate("/admin/quotas"),
     },
     {
