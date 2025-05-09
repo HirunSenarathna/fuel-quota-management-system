@@ -10,6 +10,7 @@ import {
   FundOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme, Button, Dropdown, Space, Avatar } from "antd";
+import type { MenuProps } from "antd";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -46,7 +47,6 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       key: "quotas",
       icon: <FundOutlined />,
       label: "Fuel Quotas",
-
       onClick: () => navigate("/admin/quotas"),
     },
     {
@@ -60,8 +60,8 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Determine the current selected key based on the URL path
   const selectedKey = location.pathname.split("/")[2] || "dashboard";
 
-  // User dropdown menu
-  const userMenuItems = [
+  // User dropdown menu items
+  const userMenuItems: MenuProps["items"] = [
     {
       key: "profile",
       icon: <UserOutlined />,
@@ -73,7 +73,6 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       label: "Settings",
     },
     {
-      key: "divider",
       type: "divider",
     },
     {
