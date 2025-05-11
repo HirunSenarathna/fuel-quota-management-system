@@ -1,21 +1,30 @@
-import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SignIn from './pages/SignIn';
-import FuelOwnerDashboard from './pages/FuelOwnerDashboard';
-import Operators from './pages/Operators';
+import React from "react";
+import { ConfigProvider, theme } from "antd";
+import { BrowserRouter } from "react-router-dom";
+import Router from "./routes/route";
 
-function App() {
+const App: React.FC = () => {
   return (
-    <Router>
-      <Routes>
-        {/* Route for SignIn */}
-        <Route path="/" element={<SignIn />} />
-        {/* Route for FuelOwnerDashboard */}
-        <Route path="/dashboard" element={<FuelOwnerDashboard />} />
-        <Route path="/operators" element={<Operators />} />
-      </Routes>
-    </Router>
+    <BrowserRouter>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "#00b96b",
+            borderRadius: 4,
+          },
+          components: {
+            Button: {
+              colorPrimary: "#00b96b",
+              algorithm: true,
+            },
+          },
+          algorithm: theme.defaultAlgorithm,
+        }}
+      >
+        <Router />
+      </ConfigProvider>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;

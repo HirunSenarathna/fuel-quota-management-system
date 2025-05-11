@@ -20,42 +20,42 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Define navigation items
   const navigationItems = [
     {
       key: "dashboard",
       icon: <DashboardOutlined />,
       label: "Dashboard",
-      onClick: () => navigate("/dashboard"),
+      onClick: () => navigate("/owner/dashboard"),
     },
     {
       key: "operators",
       icon: <UserOutlined />,
       label: "Operators",
-      onClick: () => navigate("/operators"),
+      onClick: () => navigate("/owner/operators"),
     },
     {
       key: "vehicles",
       icon: <CarOutlined />,
       label: "Vehicles",
-      onClick: () => navigate("/admin/vehicles"),
+      onClick: () => navigate("/owner/vehicles"),
     },
     {
       key: "reports",
       icon: <FileTextOutlined />,
       label: "Reports",
-      onClick: () => navigate("/admin/reports"),
+      onClick: () => navigate("/owner/reports"),
     },
     {
       key: "settings",
       icon: <SettingOutlined />,
       label: "Settings",
-      onClick: () => navigate("/admin/settings"),
+      onClick: () => navigate("/owner/settings"),
     },
   ];
 
-  // Determine the current selected key based on the URL path
-  const selectedKey = location.pathname.split("/")[2] || "dashboard";
+  // Extract just the last part of the path for the key
+  const pathSegments = location.pathname.split("/");
+  const selectedKey = pathSegments.length > 2 ? pathSegments[2] : "dashboard";
 
   return (
     <Sider

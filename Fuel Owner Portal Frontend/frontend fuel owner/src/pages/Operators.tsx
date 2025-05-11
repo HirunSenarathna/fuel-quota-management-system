@@ -3,8 +3,7 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
   type MRT_ColumnDef,
-} from 'material-react-table';
-import FuelOwnerLayout from "../layouts/FuelOwnerLayout";
+} from "material-react-table";
 
 // Define your Person type
 type Person = {
@@ -110,27 +109,25 @@ const Operators: React.FC = () => {
   const table = useMaterialReactTable({
     columns,
     data,
-    enablePagination: false,  
+    enablePagination: false,
   });
 
   return (
-    <FuelOwnerLayout>
-      <div
-        style={{
-          width: "100%",
-          padding: 24,
-          background: "#fff",
-          borderRadius: 8,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-          overflowX: "auto",
-          overflowY: "auto",
-          maxHeight: "500px",
-        }}
-      >
-        {/* Render the MaterialReactTable */}
-        <MaterialReactTable table={table} />
-      </div>
-    </FuelOwnerLayout>
+    <div
+      style={{
+        width: "100%",
+        padding: 24,
+        background: "#fff",
+        borderRadius: 8,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+        overflowX: "auto",
+        overflowY: "auto",
+        maxHeight: "500px",
+      }}
+    >
+      {/* Render the MaterialReactTable */}
+      <MaterialReactTable table={table} />
+    </div>
   );
 };
 
