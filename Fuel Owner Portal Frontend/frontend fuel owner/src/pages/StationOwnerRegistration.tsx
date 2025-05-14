@@ -17,6 +17,7 @@ const StationOwnerRegistration: React.FC = () => {
     register,
     handleSubmit,
     control,
+    reset, // Include reset
     formState: { errors, isSubmitSuccessful },
   } = useForm<FormData>();
 
@@ -43,31 +44,99 @@ const StationOwnerRegistration: React.FC = () => {
   const onSubmit = (data: FormData) => {
     console.log("Form Data:", data);
     alert("Registration Successful!");
+    reset(); // Clear form fields after successful submission
+  };
+
+  const formContainerStyle: React.CSSProperties = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: "100vh",
+    backgroundColor: "transparent",
+    backgroundSize: "cover",
+  };
+
+  const formStyle: React.CSSProperties = {
+    width: "100%",
+    maxWidth: "400px",
+    backgroundColor: "rgba(255, 255, 255, 0.85)",
+    backdropFilter: "blur(10px)",
+    WebkitBackdropFilter: "blur(10px)",
+    padding: "24px",
+    borderRadius: "12px",
+    boxShadow: "0 0 20px rgba(0,0,0,0.2)",
+    color: "#1f2937",
+  };
+
+  const labelStyle: React.CSSProperties = {
+    display: "block",
+    fontWeight: "bold",
+    marginBottom: "6px",
+    color: "#111827",
+  };
+
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    padding: "8px",
+    borderRadius: "6px",
+    border: "1px solid #ccc",
+    boxSizing: "border-box",
+    backgroundColor: "#ffffff",
+    color: "#000000",
+  };
+
+  const errorStyle: React.CSSProperties = {
+    color: "#dc2626",
+    fontSize: "14px",
+    marginTop: "4px",
+  };
+
+  const buttonStyle: React.CSSProperties = {
+    width: "100%",
+    backgroundColor: "#2563eb",
+    color: "white",
+    padding: "10px",
+    borderRadius: "6px",
+    border: "none",
+    cursor: "pointer",
+    transition: "background-color 0.3s",
+    fontWeight: "bold",
+  };
+
+  const successStyle: React.CSSProperties = {
+    color: "#059669",
+    textAlign: "center",
+    marginTop: "10px",
+    fontWeight: "bold",
+  };
+
+  const headingStyle: React.CSSProperties = {
+    textAlign: "center",
+    fontSize: "24px",
+    fontWeight: "bold",
+    marginBottom: "24px",
+    color: "#000000",
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          Station Owner Registration
-        </h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div>
-            <label className="block font-medium mb-1">Full Name</label>
+    <div style={formContainerStyle}>
+      <div style={formStyle}>
+        <h2 style={headingStyle}>Station Owner Registration</h2>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div style={{ marginBottom: "16px" }}>
+            <label style={labelStyle}>Full Name</label>
             <input
               type="text"
               {...register("fullName", { required: "Full Name is required" })}
-              className="w-full border p-2 rounded"
+              style={inputStyle}
             />
             {errors.fullName && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.fullName.message}
-              </p>
+              <p style={errorStyle}>{errors.fullName.message}</p>
             )}
           </div>
 
-          <div>
-            <label className="block font-medium mb-1">Owner's NIC Number</label>
+          <div style={{ marginBottom: "16px" }}>
+            <label style={labelStyle}>Owner's NIC Number</label>
             <input
               type="text"
               {...register("nic", {
@@ -79,105 +148,82 @@ const StationOwnerRegistration: React.FC = () => {
               })}
               onChange={(e) => {
                 let value = e.target.value;
-                // Check if the last character is 'v' or 'x', and capitalize it
                 if (value.length > 0 && /[vVxX]$/.test(value)) {
                   value =
                     value.slice(0, -1) +
                     value.charAt(value.length - 1).toUpperCase();
                 }
-                // Update the input value manually
                 e.target.value = value;
               }}
-              className="w-full border p-2 rounded"
+              style={inputStyle}
             />
-            {errors.nic && (
-              <p className="text-red-500 text-sm mt-1">{errors.nic.message}</p>
-            )}
+            {errors.nic && <p style={errorStyle}>{errors.nic.message}</p>}
           </div>
 
-          <div>
-            <label className="block font-medium mb-1">
-              Station License Number
-            </label>
+          <div style={{ marginBottom: "16px" }}>
+            <label style={labelStyle}>Station License Number</label>
             <input
               type="text"
               {...register("licenseNo", {
                 required: "License number is required",
               })}
-              className="w-full border p-2 rounded"
+              style={inputStyle}
             />
             {errors.licenseNo && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.licenseNo.message}
-              </p>
+              <p style={errorStyle}>{errors.licenseNo.message}</p>
             )}
           </div>
 
-          <div>
-            <label className="block font-medium mb-1">Address Line 1</label>
+          <div style={{ marginBottom: "16px" }}>
+            <label style={labelStyle}>Address Line 1</label>
             <input
               type="text"
               {...register("addressLine1", {
                 required: "Address Line 1 is required",
               })}
-              className="w-full border p-2 rounded"
+              style={inputStyle}
             />
             {errors.addressLine1 && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.addressLine1.message}
-              </p>
+              <p style={errorStyle}>{errors.addressLine1.message}</p>
             )}
           </div>
 
-          <div>
-            <label className="block font-medium mb-1">Address Line 2</label>
+          <div style={{ marginBottom: "16px" }}>
+            <label style={labelStyle}>Address Line 2</label>
             <input
               type="text"
               {...register("addressLine2")}
-              className="w-full border p-2 rounded"
+              style={inputStyle}
               placeholder="(Optional)"
             />
           </div>
 
-          <div>
-            <label className="block font-medium mb-1">City</label>
+          <div style={{ marginBottom: "16px" }}>
+            <label style={labelStyle}>City</label>
             <Controller
               control={control}
               name="city"
               rules={{ required: "City is required" }}
-              render={({
-                field,
-              }: {
-                field: {
-                  value: string;
-                  onChange: (value: string | undefined) => void;
-                  onBlur: () => void;
-                  ref: React.Ref<HTMLDivElement>;
-                };
-              }) => (
+              render={({ field }) => (
                 <Select
                   {...field}
                   options={cityOptions}
                   placeholder="Select a city"
                   isSearchable
                   value={cityOptions.find(
-                    (option: { label: string; value: string }) =>
-                      option.value === field.value
+                    (option) => option.value === field.value
                   )}
-                  onChange={(selectedOption: { label: string; value: string } | null) =>
+                  onChange={(selectedOption) =>
                     field.onChange(selectedOption?.value)
                   }
-                  ref={null} // Explicitly set ref to null to avoid type mismatch
                 />
               )}
             />
-            {errors.city && (
-              <p className="text-red-500 text-sm mt-1">{errors.city.message}</p>
-            )}
+            {errors.city && <p style={errorStyle}>{errors.city.message}</p>}
           </div>
 
-          <div>
-            <label className="block font-medium mb-1">Phone Number</label>
+          <div style={{ marginBottom: "16px" }}>
+            <label style={labelStyle}>Phone Number</label>
             <input
               type="tel"
               {...register("phone", {
@@ -187,27 +233,18 @@ const StationOwnerRegistration: React.FC = () => {
                   message: "Invalid phone number (10 digits only)",
                 },
               })}
-              className="w-full border p-2 rounded"
-              placeholder="+94#########"
+              style={inputStyle}
+              placeholder="0######### (Do not use +94)"
             />
-            {errors.phone && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.phone.message}
-              </p>
-            )}
+            {errors.phone && <p style={errorStyle}>{errors.phone.message}</p>}
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
-          >
+          <button type="submit" style={buttonStyle}>
             Register
           </button>
 
           {isSubmitSuccessful && (
-            <p className="text-green-600 text-center mt-2">
-              Form submitted successfully!
-            </p>
+            <p style={successStyle}>Form submitted successfully!</p>
           )}
         </form>
       </div>

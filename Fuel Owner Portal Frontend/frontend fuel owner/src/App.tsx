@@ -2,6 +2,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignIn from './pages/SignIn';
 import FuelOwnerDashboard from './pages/FuelOwnerDashboard';
+import StationOwnerRegistration from './pages/StationOwnerRegistration';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<SignIn />} />
         {/* Route for FuelOwnerDashboard */}
         <Route path="/dashboard" element={<FuelOwnerDashboard />} />
+        <Route path="/station-owner-registration" element={<StationOwnerRegistration />} />
       </Routes>
     </Router>
   );
