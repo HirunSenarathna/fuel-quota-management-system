@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class VehicleRegistrationRequestDto {
     private String vehicleNumber;
+    private String chassisNumber;
     private String vehicleType;
     private String fuelType;
-    private String chassisNumber;
-    private int ownerId;
 }

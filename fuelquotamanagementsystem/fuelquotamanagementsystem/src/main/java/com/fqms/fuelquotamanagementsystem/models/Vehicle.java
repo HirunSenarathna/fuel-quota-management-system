@@ -18,11 +18,8 @@ public class Vehicle {
     private int vehicleId;
 
     private String vehicleNumber;
+    private String chassisNumber;
     private String vehicleType;
     private String fuelType;
-    private Double quotaLimit;
-
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private VehicleOwner vehicleOwner;
+    private Double remainingQuotaLimit;
 }
