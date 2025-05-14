@@ -47,6 +47,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/fuel-station/register").permitAll()
                         .requestMatchers("/vehicle-owner/register").permitAll()
                         .requestMatchers("/vehicle/register").permitAll()
+                        .requestMatchers("/fuel-station/cities").permitAll()
                         .anyRequest().authenticated() // Secure all other endpoints
                 )
 
