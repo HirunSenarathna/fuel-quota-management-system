@@ -1,7 +1,8 @@
 package com.fqms.fuelquotamanagementsystem.service;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.FuelStationRegistrationRequestDto;
+import org.springframework.http.ResponseEntity;
 
 public interface FuelStationService {
-    void registerFuelStation(FuelStationRegistrationRequestDto request);
+    String registerFuelStation(FuelStationRegistrationRequestDto request);
 }

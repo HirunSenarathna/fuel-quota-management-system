@@ -11,15 +11,13 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisteredVehicle {
-
+public class RegisteredStation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int registeredVehicleId;
+    private int registeredStationId;
 
-    private String vehicleNumber;
-    private String chassisNumber;
-    private String vehicleType;
-    private String fuelType;
-    private Double remainingQuotaLimit;
+    private String licenseNumber;
+    private String addressLine1;
+    private String addressLine2;
+    private String city;
 }

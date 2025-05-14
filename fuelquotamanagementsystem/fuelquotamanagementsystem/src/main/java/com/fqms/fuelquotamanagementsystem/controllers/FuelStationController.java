@@ -17,9 +17,8 @@ public class FuelStationController {
     private FuelStationService fuelStationService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerFuelStation(@RequestBody FuelStationRegistrationRequestDto request) {
-        fuelStationService.registerFuelStation(request);
-        return ResponseEntity.ok("Fuel Station Registered Successfully!");
+    public String registerFuelStation(@RequestBody FuelStationRegistrationRequestDto request) {
+        return fuelStationService.registerFuelStation(request);
     }
 }
 
