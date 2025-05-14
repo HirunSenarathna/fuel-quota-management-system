@@ -13,6 +13,7 @@ function App() {
         {/* Route for FuelOwnerDashboard */}
         <Route path="/dashboard" element={<FuelOwnerDashboard />} />
         <Route path="/vehicle-registration" element={<VehicleRegistration />} />
+        <Route path="/station-operator-registration" element={<SignIn />} />
       </Routes>
     </Router>
   );
