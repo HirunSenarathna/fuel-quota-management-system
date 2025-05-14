@@ -1,6 +1,6 @@
 package com.fqms.fuelquotamanagementsystem.config;
 
-import com.fqms.fuelquotamanagementsystem.repository.AccountRepository;
+import com.fqms.fuelquotamanagementsystem.repository.system.AccountRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

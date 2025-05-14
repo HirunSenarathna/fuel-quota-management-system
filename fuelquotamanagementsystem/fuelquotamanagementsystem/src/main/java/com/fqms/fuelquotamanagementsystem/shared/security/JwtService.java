@@ -1,6 +1,6 @@
 package com.fqms.fuelquotamanagementsystem.shared.security;
 
-import com.fqms.fuelquotamanagementsystem.models.Account;
+import com.fqms.fuelquotamanagementsystem.models.system.Account;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
