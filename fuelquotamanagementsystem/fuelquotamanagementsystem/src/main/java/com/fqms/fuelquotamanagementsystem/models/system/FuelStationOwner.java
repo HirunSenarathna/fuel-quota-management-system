@@ -20,7 +20,6 @@ public class FuelStationOwner {
     private String fullName;
     private String nic;
     private String phoneNumber;
-    private String address;
 
     @OneToOne
     @JoinColumn(name = "account_id")

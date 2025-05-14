@@ -12,17 +12,16 @@ public class FuelStationRegistrationRequestDto {
     // Account info
     private String username;
     private String password;
-    private String email;
 
     // Fuel Station Owner info
     private String fullName;
     private String nic;
     private String phoneNumber;
-    private String address;
 
     // Fuel Station info
-    private String stationName;
-    private String location;
-    private String fuelTypesAvailable;
     private String licenseNumber;
+    private String addressLine1;
+    private String addressLine2;
+    private String city;
+
 }
