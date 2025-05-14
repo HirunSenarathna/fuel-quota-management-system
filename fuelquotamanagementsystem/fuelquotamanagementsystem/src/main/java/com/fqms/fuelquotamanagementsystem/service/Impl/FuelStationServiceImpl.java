@@ -1,12 +1,12 @@
 package com.fqms.fuelquotamanagementsystem.service.Impl;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.FuelStationRegistrationRequestDto;
-import com.fqms.fuelquotamanagementsystem.models.Account;
-import com.fqms.fuelquotamanagementsystem.models.FuelStation;
-import com.fqms.fuelquotamanagementsystem.models.FuelStationOwner;
-import com.fqms.fuelquotamanagementsystem.repository.AccountRepository;
-import com.fqms.fuelquotamanagementsystem.repository.FuelStationOwnerRepository;
-import com.fqms.fuelquotamanagementsystem.repository.FuelStationRepository;
+import com.fqms.fuelquotamanagementsystem.models.system.Account;
+import com.fqms.fuelquotamanagementsystem.models.system.FuelStation;
+import com.fqms.fuelquotamanagementsystem.models.system.FuelStationOwner;
+import com.fqms.fuelquotamanagementsystem.repository.system.AccountRepository;
+import com.fqms.fuelquotamanagementsystem.repository.system.FuelStationOwnerRepository;
+import com.fqms.fuelquotamanagementsystem.repository.system.FuelStationRepository;
 import com.fqms.fuelquotamanagementsystem.service.FuelStationService;
 import com.fqms.fuelquotamanagementsystem.shared.ApplicationConstants;
 import org.springframework.beans.factory.annotation.Autowired;

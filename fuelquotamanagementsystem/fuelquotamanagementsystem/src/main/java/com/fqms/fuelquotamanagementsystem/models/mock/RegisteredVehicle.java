@@ -1,6 +1,9 @@
-package com.fqms.fuelquotamanagementsystem.models;
+package com.fqms.fuelquotamanagementsystem.models.mock;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +14,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Vehicle {
+public class RegisteredVehicle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int vehicleId;
+    private int registeredVehicleId;
 
     private String vehicleNumber;
     private String chassisNumber;
