@@ -17,8 +17,7 @@ public class VehicleController {
     private VehicleService vehicleService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerVehicle(@RequestBody VehicleRegistrationRequestDto request) {
-        vehicleService.registerVehicle(request);
-        return ResponseEntity.ok("Vehicle Registered Successfully!");
+    public ResponseEntity<byte[]> registerVehicle(@RequestBody VehicleRegistrationRequestDto request) {
+        return vehicleService.registerVehicle(request);
     }
 }
