@@ -2,6 +2,10 @@ package com.fqms.fuelquotamanagementsystem.service;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.FuelStationRegistrationRequestDto;
 
+import java.util.List;
+
 public interface FuelStationService {
-    void registerFuelStation(FuelStationRegistrationRequestDto request);
+    String registerFuelStation(FuelStationRegistrationRequestDto request);
+
+    List<String> getCitiesOfStation();
 }

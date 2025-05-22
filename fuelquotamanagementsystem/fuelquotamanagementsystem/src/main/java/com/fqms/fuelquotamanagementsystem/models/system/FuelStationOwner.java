@@ -1,4 +1,4 @@
-package com.fqms.fuelquotamanagementsystem.models;
+package com.fqms.fuelquotamanagementsystem.models.system;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,11 +11,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FuelOperator {
+public class FuelStationOwner {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int operatorId;
+    private int ownerId;
 
     private String fullName;
     private String nic;
@@ -24,8 +24,4 @@ public class FuelOperator {
     @OneToOne
     @JoinColumn(name = "account_id")
     private Account account;
-
-    @ManyToOne
-    @JoinColumn(name = "station_id")
-    private FuelStation station;
 }

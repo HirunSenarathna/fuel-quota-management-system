@@ -1,4 +1,4 @@
-package com.fqms.fuelquotamanagementsystem.models;
+package com.fqms.fuelquotamanagementsystem.models.system;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,10 +17,11 @@ public class FuelStation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int stationId;
 
-    private String stationName;
-    private String location;
-    private String fuelTypesAvailable;
     private String licenseNumber;
+    private String addressLine1;
+    private String addressLine2;
+    private String city;
+
 
     @ManyToOne
     @JoinColumn(name = "owner_id")

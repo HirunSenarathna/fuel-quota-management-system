@@ -1,4 +1,4 @@
-package com.fqms.fuelquotamanagementsystem.models;
+package com.fqms.fuelquotamanagementsystem.models.system;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

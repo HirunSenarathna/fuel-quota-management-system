@@ -1,7 +1,7 @@
 package com.fqms.fuelquotamanagementsystem.service.Impl;
 
-import com.fqms.fuelquotamanagementsystem.models.Account;
-import com.fqms.fuelquotamanagementsystem.repository.AccountRepository;
+import com.fqms.fuelquotamanagementsystem.models.system.Account;
+import com.fqms.fuelquotamanagementsystem.repository.system.AccountRepository;
 import com.fqms.fuelquotamanagementsystem.service.UserService;
 import org.springframework.stereotype.Service;
 

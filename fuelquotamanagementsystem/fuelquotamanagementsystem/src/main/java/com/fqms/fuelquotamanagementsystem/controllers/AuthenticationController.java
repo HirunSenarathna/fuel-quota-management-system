@@ -1,7 +1,7 @@
 package com.fqms.fuelquotamanagementsystem.controllers;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.LoginUserDto;
-import com.fqms.fuelquotamanagementsystem.models.Account;
+import com.fqms.fuelquotamanagementsystem.models.system.Account;
 import com.fqms.fuelquotamanagementsystem.responses.LoginResponse;
 import com.fqms.fuelquotamanagementsystem.service.AuthService;
 import com.fqms.fuelquotamanagementsystem.shared.exceptions.NotFoundException;
