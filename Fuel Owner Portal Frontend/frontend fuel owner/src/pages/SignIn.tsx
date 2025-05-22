@@ -10,6 +10,7 @@ import {
   CircularProgress, 
   Alert
 } from '@mui/material';
+import { login } from '../services/authService';
 import '../styles/SignIn.css';
 
 interface Credentials {
@@ -33,21 +34,25 @@ const SignIn: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-    
-    // Simulate API call
-    setTimeout(() => {
+  
+    try {
+      const response = await login(credentials);
+      console.log('Login successful!', response);
+  
+      // Save token to localStorage
+      localStorage.setItem('token', response.accessToken);
+  
+      // Redirect to dashboard
+      window.location.href = '/dashboard';
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
       setIsLoading(false);
-      if (credentials.username && credentials.password) {
-        console.log('Sign in successful!', credentials);
-        
-      } else {
-        setError('Please enter both username and password');
-      }
-    }, 1500);
+    }
   };
 
   return (
