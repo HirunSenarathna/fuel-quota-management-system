@@ -1,7 +1,7 @@
 package com.fqms.fuelquotamanagementsystem.controllers;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.FuelOperatorDto;
-import com.fqms.fuelquotamanagementsystem.Dtos.response.FuelOperatorResponseDto;
+import com.fqms.fuelquotamanagementsystem.responses.FuelOperatorResponseDto;
 import com.fqms.fuelquotamanagementsystem.service.FuelOperatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

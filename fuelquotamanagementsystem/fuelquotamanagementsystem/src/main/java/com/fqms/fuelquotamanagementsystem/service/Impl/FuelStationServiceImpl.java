@@ -8,6 +8,7 @@ import com.fqms.fuelquotamanagementsystem.repository.mock.RegisteredStationRepos
 import com.fqms.fuelquotamanagementsystem.repository.system.AccountRepository;
 import com.fqms.fuelquotamanagementsystem.repository.system.FuelStationOwnerRepository;
 import com.fqms.fuelquotamanagementsystem.repository.system.FuelStationRepository;
+import com.fqms.fuelquotamanagementsystem.responses.FuelStationResponseDto;
 import com.fqms.fuelquotamanagementsystem.service.FuelStationService;
 import com.fqms.fuelquotamanagementsystem.shared.ApplicationConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FuelStationServiceImpl implements FuelStationService {
@@ -82,5 +84,19 @@ public class FuelStationServiceImpl implements FuelStationService {
         List<String> cities = registeredStationRepository.getAllCities();
         return cities;
     }
+
+    @Override
+    public List<FuelStationResponseDto> getFuelStationService() {
+        List<FuelStation> stations = stationRepository.findAll();
+
+        return stations.stream().map(station -> new FuelStationResponseDto(
+                station.getStationId(),
+                station.getLicenseNumber(),
+                station.getCity(),
+                station.getStationOwner().getFullName(),  // Assuming FuelStation has a reference to FuelStationOwner
+                station.getStationOwner().getPhoneNumber()
+        )).collect(Collectors.toList());
+    }
+
 }
 

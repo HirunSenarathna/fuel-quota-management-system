@@ -1,7 +1,7 @@
 package com.fqms.fuelquotamanagementsystem.service;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.FuelOperatorDto;
-import com.fqms.fuelquotamanagementsystem.Dtos.response.FuelOperatorResponseDto;
+import com.fqms.fuelquotamanagementsystem.responses.FuelOperatorResponseDto;
 
 import java.util.List;
 
