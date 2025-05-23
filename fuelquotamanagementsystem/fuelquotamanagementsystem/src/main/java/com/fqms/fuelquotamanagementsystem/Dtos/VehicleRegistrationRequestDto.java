@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VehicleRegistrationRequestDto {
+    private String username;
+    private String password;
     private String vehicleNumber;
     private String chassisNumber;
     private String vehicleType;

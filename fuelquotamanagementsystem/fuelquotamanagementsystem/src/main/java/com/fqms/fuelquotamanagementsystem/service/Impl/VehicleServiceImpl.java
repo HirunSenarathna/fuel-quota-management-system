@@ -32,6 +32,8 @@ public class VehicleServiceImpl implements VehicleService {
     public ResponseEntity<byte[]> registerVehicle(VehicleRegistrationRequestDto request) {
 
         Vehicle vehicle = new Vehicle();
+        vehicle.setUsername(request.getUsername());
+        vehicle.setPassword(request.getPassword());
         vehicle.setVehicleNumber(request.getVehicleNumber());
         vehicle.setChassisNumber(request.getChassisNumber());
         vehicle.setVehicleType(request.getVehicleType());

@@ -17,6 +17,8 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int vehicleId;
 
+    private String username;
+    private String password;
     private String vehicleNumber;
     private String chassisNumber;
     private String vehicleType;
