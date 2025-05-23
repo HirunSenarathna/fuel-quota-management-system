@@ -1,6 +1,5 @@
 package com.fqms.fuelquotamanagementsystem.Dtos;
 
-import com.fqms.fuelquotamanagementsystem.models.system.FuelStationOwner;
 import lombok.*;
 
 @Data
