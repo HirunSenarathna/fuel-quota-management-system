@@ -40,35 +40,40 @@ public class FuelStationServiceImpl implements FuelStationService {
 
     @Override
     public String registerFuelStation(FuelStationRegistrationRequestDto request) {
+        boolean exists = stationRepository.existsFuelStationByLicenseNumberAndCity(request.getLicenseNumber(), request.getCity());
 
-        if (!isRegisteredVehicle(request.getLicenseNumber(), request.getCity())) {
-            return "This station is not registered.";
+        if(exists) {
+            return "The station already exists";
         } else {
-            // Create account
-            Account account = new Account();
-            account.setUsername(request.getUsername());
-            account.setPassword(passwordEncoder.encode(request.getPassword()));
-            account.setRole( ApplicationConstants.ROLES.ROLE_FUEL_STATION_OWNER.name());
-            Account savedAccount = accountRepository.save(account);
+            if (!isRegisteredVehicle(request.getLicenseNumber(), request.getCity())) {
+                return "This station is not registered.";
+            } else {
+                // Create account
+                Account account = new Account();
+                account.setUsername(request.getUsername());
+                account.setPassword(passwordEncoder.encode(request.getPassword()));
+                account.setRole( ApplicationConstants.ROLES.ROLE_FUEL_STATION_OWNER.name());
+                Account savedAccount = accountRepository.save(account);
 
-            // Create fuel station owner
-            FuelStationOwner owner = new FuelStationOwner();
-            owner.setFullName(request.getFullName());
-            owner.setNic(request.getNic());
-            owner.setPhoneNumber(request.getPhoneNumber());
-            owner.setAccount(savedAccount);
-            FuelStationOwner savedOwner = ownerRepository.save(owner);
+                // Create fuel station owner
+                FuelStationOwner owner = new FuelStationOwner();
+                owner.setFullName(request.getFullName());
+                owner.setNic(request.getNic());
+                owner.setPhoneNumber(request.getPhoneNumber());
+                owner.setAccount(savedAccount);
+                FuelStationOwner savedOwner = ownerRepository.save(owner);
 
-            // Create fuel station
-            FuelStation station = new FuelStation();
-            station.setAddressLine1(request.getAddressLine1());
-            station.setAddressLine2(request.getAddressLine2());
-            station.setCity(request.getCity());
-            station.setLicenseNumber(request.getLicenseNumber());
-            station.setStationOwner(savedOwner);
-            stationRepository.save(station);
+                // Create fuel station
+                FuelStation station = new FuelStation();
+                station.setAddressLine1(request.getAddressLine1());
+                station.setAddressLine2(request.getAddressLine2());
+                station.setCity(request.getCity());
+                station.setLicenseNumber(request.getLicenseNumber());
+                station.setStationOwner(savedOwner);
+                stationRepository.save(station);
 
-            return "Fuel Station Registered Successfully!";
+                return "Fuel Station Registered Successfully!";
+            }
         }
     }
 
