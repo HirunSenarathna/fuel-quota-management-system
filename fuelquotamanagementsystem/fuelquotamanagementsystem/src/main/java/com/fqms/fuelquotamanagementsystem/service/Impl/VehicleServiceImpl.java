@@ -51,32 +51,28 @@ public class VehicleServiceImpl implements VehicleService {
         // Step 2: Save the vehicle in the system database
         Vehicle savedVehicle = vehicleRepository.save(vehicle);
 
-        if (savedVehicle != null) {
-            try {
-                // Step 3: Prepare data for QR
-                String data = String.format(
-                        "Vehicle Number: %s\nChassis Number: %s\nVehicle Type: %s\nFuel Type: %s\nRemaining Quota Limit: %.2f",
-                        savedVehicle.getVehicleNumber(),
-                        savedVehicle.getChassisNumber(),
-                        savedVehicle.getVehicleType(),
-                        savedVehicle.getFuelType(),
-                        savedVehicle.getRemainingQuotaLimit()
-                );
+        try {
+            // Step 3: Prepare data for QR
+            String data = String.format(
+                    "Vehicle Number: %s\nChassis Number: %s\nVehicle Type: %s\nFuel Type: %s\nRemaining Quota Limit: %.2f",
+                    savedVehicle.getVehicleNumber(),
+                    savedVehicle.getChassisNumber(),
+                    savedVehicle.getVehicleType(),
+                    savedVehicle.getFuelType(),
+                    savedVehicle.getRemainingQuotaLimit()
+            );
 
-                byte[] qrImage = QRCodeGenerator.generateQRCode(data, 300, 300);
+            byte[] qrImage = QRCodeGenerator.generateQRCode(data, 300, 300);
 
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.IMAGE_PNG);
-                headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=vehicle-qr.png");
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_PNG);
+            headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=vehicle-qr.png");
 
-                return ResponseEntity.ok().headers(headers).body(qrImage);
+            return ResponseEntity.ok().headers(headers).body(qrImage);
 
-            } catch (WriterException | IOException e) {
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Registration save failed
+        } catch (WriterException | IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }
