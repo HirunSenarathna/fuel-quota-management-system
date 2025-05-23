@@ -2,6 +2,7 @@ package com.fqms.fuelquotamanagementsystem.service.Impl;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.FuelStationRegistrationRequestDto;
 import com.fqms.fuelquotamanagementsystem.Dtos.ReceivedFuelQuantityDto;
+import com.fqms.fuelquotamanagementsystem.Dtos.StationFuelQuantityDto;
 import com.fqms.fuelquotamanagementsystem.models.system.Account;
 import com.fqms.fuelquotamanagementsystem.models.system.FuelStation;
 import com.fqms.fuelquotamanagementsystem.models.system.FuelStationOwner;
@@ -138,6 +139,22 @@ public class FuelStationServiceImpl implements FuelStationService {
         } catch (Exception e) {
             e.printStackTrace();
             return "An error occurred while saving fuel quantity: " + e.getMessage();
+        }
+    }
+
+    @Override
+    public int getRemainingFuelQuantity(StationFuelQuantityDto stationFuelQuantityDto) {
+        StationFuelQuantity stationFuelQuantity = stationFuelQuantityRepository
+                .findByStationIdAndFuelType(
+                        stationFuelQuantityDto.getStationId(),
+                        stationFuelQuantityDto.getFuelType());
+
+        if (stationFuelQuantity != null) {
+            return stationFuelQuantity.getFuelQuantity();
+        } else {
+            throw new IllegalArgumentException("No fuel record found for Station ID " +
+                    stationFuelQuantityDto.getStationId() + " and Fuel Type '" +
+                    stationFuelQuantityDto.getFuelType() + "'");
         }
     }
 }
