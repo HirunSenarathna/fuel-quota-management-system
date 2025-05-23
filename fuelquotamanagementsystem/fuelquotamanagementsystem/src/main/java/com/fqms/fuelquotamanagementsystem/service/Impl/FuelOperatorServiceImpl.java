@@ -1,7 +1,7 @@
 package com.fqms.fuelquotamanagementsystem.service.Impl;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.FuelOperatorDto;
-import com.fqms.fuelquotamanagementsystem.Dtos.response.FuelOperatorResponseDto;
+import com.fqms.fuelquotamanagementsystem.responses.FuelOperatorResponseDto;
 import com.fqms.fuelquotamanagementsystem.models.system.Account;
 import com.fqms.fuelquotamanagementsystem.models.system.FuelOperator;
 import com.fqms.fuelquotamanagementsystem.models.system.FuelStation;

@@ -1,4 +1,4 @@
-package com.fqms.fuelquotamanagementsystem.Dtos.response;
+package com.fqms.fuelquotamanagementsystem.responses;
 
 import lombok.*;
 
