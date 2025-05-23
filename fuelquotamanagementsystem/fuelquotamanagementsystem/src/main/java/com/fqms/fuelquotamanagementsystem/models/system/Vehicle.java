@@ -23,5 +23,6 @@ public class Vehicle {
     private String chassisNumber;
     private String vehicleType;
     private String fuelType;
+    private String phone;
     private Double remainingQuotaLimit;
 }
