@@ -6,6 +6,7 @@ import FuelOwnerDashboard from './pages/FuelOwnerDashboard';
 import StationOwnerRegistration from './pages/StationOwnerRegistration';
 import VehicleRegistration from './pages/VehicleRegistration';
 import Operators from './pages/Operators';
+import SignUp from './pages/SignUp';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/vehicle-registration" element={<VehicleRegistration />} />
         <Route path="/station-operator-registration" element={<SignIn />} />
         <Route path="/operators" element={<Operators />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </Router>
   );
