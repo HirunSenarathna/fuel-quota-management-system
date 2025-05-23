@@ -1,7 +1,6 @@
 package com.fqms.fuelquotamanagementsystem.service;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.FuelStationRegistrationRequestDto;
-import com.fqms.fuelquotamanagementsystem.models.system.FuelStation;
 import com.fqms.fuelquotamanagementsystem.responses.FuelStationResponseDto;
 
 import java.util.List;

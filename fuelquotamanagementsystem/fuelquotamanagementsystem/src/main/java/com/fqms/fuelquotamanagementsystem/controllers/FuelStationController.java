@@ -1,7 +1,6 @@
 package com.fqms.fuelquotamanagementsystem.controllers;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.FuelStationRegistrationRequestDto;
-import com.fqms.fuelquotamanagementsystem.models.system.FuelStation;
 import com.fqms.fuelquotamanagementsystem.responses.FuelStationResponseDto;
 import com.fqms.fuelquotamanagementsystem.service.FuelStationService;
 import org.springframework.beans.factory.annotation.Autowired;
