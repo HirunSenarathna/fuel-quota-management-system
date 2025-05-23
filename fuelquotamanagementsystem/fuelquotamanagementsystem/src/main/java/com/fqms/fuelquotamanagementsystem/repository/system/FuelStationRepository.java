@@ -3,7 +3,6 @@ package com.fqms.fuelquotamanagementsystem.repository.system;
 import com.fqms.fuelquotamanagementsystem.models.system.FuelStation;
 import com.fqms.fuelquotamanagementsystem.models.system.FuelStationOwner;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
