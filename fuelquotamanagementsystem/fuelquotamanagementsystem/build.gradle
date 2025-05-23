@@ -46,6 +46,9 @@ dependencies {
 	// QR code generation
 	implementation("com.google.zxing:core:3.5.3")
 	implementation("com.google.zxing:javase:3.5.3")
+
+	//Twilio SMS dependency
+	implementation("com.twilio.sdk:twilio:10.7.2")
 }
 
 tasks.named('test') {
