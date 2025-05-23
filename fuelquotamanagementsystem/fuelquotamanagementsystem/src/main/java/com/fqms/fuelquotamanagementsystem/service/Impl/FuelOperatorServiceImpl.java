@@ -1,6 +1,7 @@
 package com.fqms.fuelquotamanagementsystem.service.Impl;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.FuelOperatorDto;
+import com.fqms.fuelquotamanagementsystem.Dtos.response.FuelOperatorResponseDto;
 import com.fqms.fuelquotamanagementsystem.models.system.Account;
 import com.fqms.fuelquotamanagementsystem.models.system.FuelOperator;
 import com.fqms.fuelquotamanagementsystem.models.system.FuelStation;
@@ -15,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,4 +66,17 @@ public final class FuelOperatorServiceImpl implements FuelOperatorService {
             return "Fuel Operator Registered Successfully!";
         }
     }
+
+    @Override
+    public List<FuelOperatorResponseDto> getAllFuelOperators(int stationId) {
+        List<FuelOperator> operators = fuelOperatorRepository.findAllByStationId(stationId);
+
+        return operators.stream().map(operator -> new FuelOperatorResponseDto(
+                operator.getFullName(),
+                operator.getNic(),
+                operator.getPhoneNumber(), // maps to contactNo
+                operator.getAccount().getUsername()
+        )).collect(Collectors.toList());
+    }
+
 }
