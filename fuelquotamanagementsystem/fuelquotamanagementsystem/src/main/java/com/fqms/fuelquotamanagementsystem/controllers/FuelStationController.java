@@ -2,6 +2,7 @@ package com.fqms.fuelquotamanagementsystem.controllers;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.FuelStationRegistrationRequestDto;
 import com.fqms.fuelquotamanagementsystem.Dtos.ReceivedFuelQuantityDto;
+import com.fqms.fuelquotamanagementsystem.Dtos.RemainingFuelQuantityForStations;
 import com.fqms.fuelquotamanagementsystem.Dtos.StationFuelQuantityDto;
 import com.fqms.fuelquotamanagementsystem.responses.FuelStationResponseDto;
 import com.fqms.fuelquotamanagementsystem.service.FuelStationService;
@@ -53,5 +54,13 @@ public class FuelStationController {
     public int getRemainingFuelQuantity(@RequestBody StationFuelQuantityDto stationFuelQuantityDto) {
         return fuelStationService.getRemainingFuelQuantity(stationFuelQuantityDto);
     }
+
+    // get remaining fuel quantities of each station for admin
+    @GetMapping("/all-remaining-fuel")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public List<RemainingFuelQuantityForStations> getRemainingFuelDetailsForAllStations() {
+        return fuelStationService.getAllStationFuelDetails();
+    }
+
 }
 
