@@ -1,13 +1,16 @@
 package com.fqms.fuelquotamanagementsystem.service.Impl;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.FuelStationRegistrationRequestDto;
+import com.fqms.fuelquotamanagementsystem.Dtos.ReceivedFuelQuantityDto;
 import com.fqms.fuelquotamanagementsystem.models.system.Account;
 import com.fqms.fuelquotamanagementsystem.models.system.FuelStation;
 import com.fqms.fuelquotamanagementsystem.models.system.FuelStationOwner;
+import com.fqms.fuelquotamanagementsystem.models.system.StationFuelQuantity;
 import com.fqms.fuelquotamanagementsystem.repository.mock.RegisteredStationRepository;
 import com.fqms.fuelquotamanagementsystem.repository.system.AccountRepository;
 import com.fqms.fuelquotamanagementsystem.repository.system.FuelStationOwnerRepository;
 import com.fqms.fuelquotamanagementsystem.repository.system.FuelStationRepository;
+import com.fqms.fuelquotamanagementsystem.repository.system.StationFuelQuantityRepository;
 import com.fqms.fuelquotamanagementsystem.responses.FuelStationResponseDto;
 import com.fqms.fuelquotamanagementsystem.service.FuelStationService;
 import com.fqms.fuelquotamanagementsystem.shared.ApplicationConstants;
@@ -35,6 +38,8 @@ public class FuelStationServiceImpl implements FuelStationService {
 
     @Autowired
     private RegisteredStationRepository registeredStationRepository;
+    @Autowired
+    private StationFuelQuantityRepository stationFuelQuantityRepository;
 
     public boolean isRegisteredVehicle(String licenseNumber, String city) {
         return registeredStationRepository.findByLicenseNumberAndCity(licenseNumber, city).isPresent();
@@ -98,5 +103,42 @@ public class FuelStationServiceImpl implements FuelStationService {
         )).collect(Collectors.toList());
     }
 
+    @Override
+    public String setReceivedFuelQuantity(ReceivedFuelQuantityDto receivedFuelQuantityDto) {
+        try {
+            // Validate input
+            if (receivedFuelQuantityDto.getStationId() <= 0 ||
+                    receivedFuelQuantityDto.getFuelType() == null ||
+                    receivedFuelQuantityDto.getFuelType().isEmpty() ||
+                    receivedFuelQuantityDto.getFuelQuantity() <= 0) {
+                return "Invalid input: Please check station ID, fuel type, and fuel quantity.";
+            }
+
+            System.out.println("Received data: " +
+                    receivedFuelQuantityDto.getStationId() + " " +
+                    receivedFuelQuantityDto.getFuelType() + " " +
+                    receivedFuelQuantityDto.getFuelQuantity());
+
+            StationFuelQuantity stationFuelQuantity = stationFuelQuantityRepository
+                    .findByStationIdAndFuelType(receivedFuelQuantityDto.getStationId(), receivedFuelQuantityDto.getFuelType());
+
+            if (stationFuelQuantity != null) {
+                stationFuelQuantity.setFuelQuantity(receivedFuelQuantityDto.getFuelQuantity());
+                stationFuelQuantityRepository.save(stationFuelQuantity);
+                return "Fuel quantity updated successfully.";
+            } else {
+                StationFuelQuantity newEntry = new StationFuelQuantity();
+                newEntry.setStationId(receivedFuelQuantityDto.getStationId());
+                newEntry.setFuelType(receivedFuelQuantityDto.getFuelType());
+                newEntry.setFuelQuantity(receivedFuelQuantityDto.getFuelQuantity());
+                stationFuelQuantityRepository.save(newEntry);
+                return "Fuel quantity added successfully for new station-fuel combination.";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "An error occurred while saving fuel quantity: " + e.getMessage();
+        }
+    }
 }
 
