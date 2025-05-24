@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Layout, theme, Button, Dropdown, Space, Avatar, MenuProps } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom"; 
 import Sidebar from "../components/Fuel Owner Dashboard/Sidebar";
 
 const { Header, Content } = Layout;
@@ -14,6 +15,15 @@ const FuelOwnerLayout: React.FC<FuelOwnerLayoutProps> = ({ children }) => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const navigate = useNavigate(); 
+
+  const handleLogout = () => {
+    console.log("Logging out..."); 
+    localStorage.removeItem("token"); 
+    console.log("Token removed from localStorage", localStorage.getItem("token")); 
+    navigate("/signin"); 
+  };
+  
 
   const userMenuItems: MenuProps["items"] = [
     {
@@ -29,9 +39,7 @@ const FuelOwnerLayout: React.FC<FuelOwnerLayoutProps> = ({ children }) => {
       key: "logout",
       icon: <LogoutOutlined />,
       label: "Logout",
-      onClick: () => {
-        // logout logic
-      },
+      onClick: handleLogout,
     },
   ];
 

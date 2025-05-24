@@ -8,8 +8,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VehicleResponseDto {
+    private int accountId;
     private String username;
     private String password;
+    private String role;
     private int vehicleId;
     private String vehicleNumber;
     private String chassisNumber;
