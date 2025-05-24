@@ -1,16 +1,10 @@
 package com.fqms.fuelquotamanagementsystem.service.Impl;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.LoginUserDto;
-import com.fqms.fuelquotamanagementsystem.models.system.Vehicle;
-import com.fqms.fuelquotamanagementsystem.repository.system.VehicleRepository;
+import com.fqms.fuelquotamanagementsystem.models.system.*;
+import com.fqms.fuelquotamanagementsystem.repository.system.*;
 import com.fqms.fuelquotamanagementsystem.responses.FuelOperatorUserResponseDto;
 import com.fqms.fuelquotamanagementsystem.responses.StationOwnerResponseDto;
-import com.fqms.fuelquotamanagementsystem.models.system.Account;
-import com.fqms.fuelquotamanagementsystem.models.system.FuelOperator;
-import com.fqms.fuelquotamanagementsystem.models.system.FuelStationOwner;
-import com.fqms.fuelquotamanagementsystem.repository.system.AccountRepository;
-import com.fqms.fuelquotamanagementsystem.repository.system.FuelOperatorRepository;
-import com.fqms.fuelquotamanagementsystem.repository.system.FuelStationOwnerRepository;
 import com.fqms.fuelquotamanagementsystem.responses.VehicleResponseDto;
 import com.fqms.fuelquotamanagementsystem.service.AuthService;
 import com.fqms.fuelquotamanagementsystem.shared.exceptions.NotFoundException;
@@ -35,6 +29,9 @@ public class AuthServiceImpli implements AuthService {
     private FuelStationOwnerRepository fuelStationOwnerRepository;
     @Autowired
     private FuelOperatorRepository fuelOperatorRepository;
+
+    @Autowired
+    private FuelStationRepository fuelStationRepository;
     @Autowired
     private VehicleRepository vehicleRepository;
 
@@ -72,8 +69,11 @@ public class AuthServiceImpli implements AuthService {
 
         // Check if the user is an StationOwnerResponseDto
         Optional<FuelStationOwner> stationOwner = fuelStationOwnerRepository.findByAccountId(account.getId());
+
         if (stationOwner.isPresent()) {
             FuelStationOwner stOwner = stationOwner.get();
+            FuelStation fuelStation = fuelStationRepository.findByStationOwner(stationOwner);
+
             // Return the StationOwnerResponseDto
             return Optional.of(new StationOwnerResponseDto(
                     account.getId(),
@@ -83,7 +83,9 @@ public class AuthServiceImpli implements AuthService {
                     stOwner.getOwnerId(),
                     stOwner.getNic(),
                     stOwner.getFullName(),
-                    stOwner.getPhoneNumber()
+                    stOwner.getPhoneNumber(),
+                    fuelStation.getStationId()
+
             ));
         }
 
@@ -100,24 +102,27 @@ public class AuthServiceImpli implements AuthService {
                     flOperator.getOperatorId(),
                     flOperator.getFullName(),
                     flOperator.getNic(),
-                    flOperator.getPhoneNumber()
+                    flOperator.getPhoneNumber(),
+                    flOperator.getStation().getStationId()
             ));
         }
 
-        Vehicle vehicle = vehicleRepository.findByUsernameIgnoreCase(username)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
-        if (vehicle != null) {
+        Optional<Vehicle> vehicle = vehicleRepository.findByAccountId(account.getId());
+        if (vehicle.isPresent()) {
+            Vehicle vehicleObj = vehicle.get();
+            // Return the FuelOperator
             return Optional.of(new VehicleResponseDto(
-                    vehicle.getUsername(),
-                    vehicle.getPassword(),
-                    vehicle.getVehicleId(),
-                    vehicle.getVehicleNumber(),
-                    vehicle.getChassisNumber(),
-                    vehicle.getVehicleType(),
-                    vehicle.getPhone(),
-                    vehicle.getFuelType(),
-                    vehicle.getRemainingQuotaLimit()
+                    account.getId(),
+                    account.getUsername(),
+                    account.getPassword(),
+                    account.getRole(),
+                    vehicleObj.getVehicleId(),
+                    vehicleObj.getVehicleNumber(),
+                    vehicleObj.getChassisNumber(),
+                    vehicleObj.getVehicleType(),
+                    vehicleObj.getPhone(),
+                    vehicleObj.getFuelType(),
+                    vehicleObj.getRemainingQuotaLimit()
             ));
         }
 

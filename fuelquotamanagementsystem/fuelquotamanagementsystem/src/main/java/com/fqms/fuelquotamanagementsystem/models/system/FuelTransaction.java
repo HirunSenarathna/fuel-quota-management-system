@@ -26,5 +26,10 @@ public class FuelTransaction {
     private String vehicleNumber;
     private double pumpedAmount;
     private double remainingQuota;
+    private int operatorId;
+    private int stationId;
+    private String fuelType;
     private LocalDateTime transactionDate;
+
+
 }
