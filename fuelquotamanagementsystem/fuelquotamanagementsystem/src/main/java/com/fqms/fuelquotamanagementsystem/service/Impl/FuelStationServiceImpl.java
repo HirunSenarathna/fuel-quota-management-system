@@ -89,8 +89,7 @@ public class FuelStationServiceImpl implements FuelStationService {
 
     @Override
     public List<String> getCitiesOfStation() {
-        List<String> cities = registeredStationRepository.getAllCities();
-        return cities;
+        return registeredStationRepository.getAllCities();
     }
 
     @Override
