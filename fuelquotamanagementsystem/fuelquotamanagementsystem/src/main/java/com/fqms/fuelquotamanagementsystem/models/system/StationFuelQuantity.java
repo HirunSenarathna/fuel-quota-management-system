@@ -1,6 +1,9 @@
 package com.fqms.fuelquotamanagementsystem.models.system;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,18 +14,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Vehicle {
-
+public class StationFuelQuantity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int vehicleId;
+    private int id;
 
-    private String username;
-    private String password;
-    private String vehicleNumber;
-    private String chassisNumber;
-    private String vehicleType;
+    private int stationId;
     private String fuelType;
-    private String phone;
-    private Double remainingQuotaLimit;
+    private int fuelQuantity;
 }

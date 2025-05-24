@@ -1,17 +1,17 @@
 package com.fqms.fuelquotamanagementsystem.Dtos;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class VehicleRegistrationRequestDto {
-    private String username;
-    private String password;
+public class FuelPumpRequestDto {
+
     private String vehicleNumber;
     private String chassisNumber;
-    private String vehicleType;
-    private String fuelType;
+    private double pumpedAmount;
 }
