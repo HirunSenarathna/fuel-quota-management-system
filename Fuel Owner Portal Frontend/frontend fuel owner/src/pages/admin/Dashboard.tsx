@@ -1,6 +1,7 @@
 import React from "react";
 import StatCard from "../../features/dashboard/StatCard";
 import FuelQuotaChart from "../../features/dashboard/FuelQuotaChart";
+import StationQuotaChart from "../../features/dashboard/StationQuotaChart";
 import { Row, Col, Typography } from "antd";
 
 const { Title } = Typography;
@@ -54,10 +55,13 @@ const Dashboard: React.FC = () => {
         </Col>
       </Row>
 
-      {/* Chart Row */}
+      {/* Chart Rows */}
       <Row gutter={[16, 16]} style={{ marginTop: "24px" }}>
-        <Col xs={24}>
-          <FuelQuotaChart title="Fuel Quota Remaining" />
+        <Col xs={24} md={12}>
+          <FuelQuotaChart title="Overall Fuel Quota" />
+        </Col>
+        <Col xs={24} md={12}>
+          <StationQuotaChart title="Station Fuel Quotas" />
         </Col>
       </Row>
     </div>
