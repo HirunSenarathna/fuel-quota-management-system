@@ -3,8 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   DashboardOutlined,
   UserOutlined,
-  CarOutlined,
-  SettingOutlined,
+  IeOutlined,
   LogoutOutlined,
   HomeOutlined,
   FundOutlined,
@@ -38,22 +37,16 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       onClick: () => navigate("/admin/stations"),
     },
     {
-      key: "vehicles",
-      icon: <CarOutlined />,
-      label: "Vehicles",
-      onClick: () => navigate("/admin/vehicles"),
-    },
-    {
       key: "quotas",
       icon: <FundOutlined />,
       label: "Fuel Quotas",
       onClick: () => navigate("/admin/quotas"),
     },
     {
-      key: "settings",
-      icon: <SettingOutlined />,
-      label: "Settings",
-      onClick: () => navigate("/admin/settings"),
+      key: "analytics",
+      icon: <IeOutlined />,
+      label: "Reports",
+      onClick: () => navigate("/admin/reports"),
     },
   ];
 
@@ -66,11 +59,6 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       key: "profile",
       icon: <UserOutlined />,
       label: "Profile",
-    },
-    {
-      key: "settings",
-      icon: <SettingOutlined />,
-      label: "Settings",
     },
     {
       type: "divider",

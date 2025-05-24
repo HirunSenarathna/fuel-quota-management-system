@@ -1,17 +1,9 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
   MaterialReactTable,
   useMaterialReactTable,
   type MRT_ColumnDef,
 } from "material-react-table";
-import FuelOwnerLayout from "../layouts/FuelOwnerLayout";
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogContent,
-} from "@mui/material";
-import StationOperatorRegistration from "./StationOperatorRegistration"; // Adjust the path if needed
 
 // Define your Person type
 type Person = {
@@ -85,15 +77,7 @@ const data: Person[] = [
   },
 ];
 
-// Define the Operators component
 const Operators: React.FC = () => {
-  // State to manage the modal open/close
-  const [openRegisterModal, setOpenRegisterModal] = useState(false);
-
-  const handleOpenModal = () => setOpenRegisterModal(true);
-  const handleCloseModal = () => setOpenRegisterModal(false);
-
-  // Define table columns using useMemo
   const columns = useMemo<MRT_ColumnDef<Person>[]>(
     () => [
       {
@@ -120,7 +104,6 @@ const Operators: React.FC = () => {
     []
   );
 
-  // Create the MaterialReactTable instance
   const table = useMaterialReactTable({
     columns,
     data,
@@ -128,43 +111,21 @@ const Operators: React.FC = () => {
   });
 
   return (
-    <FuelOwnerLayout>
-      <div
-        style={{
-          width: "100%",
-          padding: 24,
-          background: "#fff",
-          borderRadius: 8,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-          overflowX: "auto",
-          overflowY: "auto",
-          maxHeight: "500px",
-        }}
-      >
-        {/* Render the MaterialReactTable */}
-        <MaterialReactTable table={table} />
-      </div>
-
-      {/* Button under the table */}
-      <Box mt={2} display="flex" justifyContent="flex-end">
-        <Button
-          variant="contained"
-          size="large"
-          fullWidth
-          sx={{ maxWidth: 200 }} // controls the width
-          onClick={handleOpenModal}
-        >
-          Register Operator
-        </Button>
-      </Box>
-
-      {/* Registration Modal */}
-      <Dialog open={openRegisterModal} onClose={handleCloseModal} fullWidth maxWidth="sm">
-        <DialogContent>
-          <StationOperatorRegistration />
-        </DialogContent>
-      </Dialog>
-    </FuelOwnerLayout>
+    <div
+      style={{
+        width: "100%",
+        padding: 24,
+        background: "#fff",
+        borderRadius: 8,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+        overflowX: "auto",
+        overflowY: "auto",
+        maxHeight: "500px",
+      }}
+    >
+      {/* Render the MaterialReactTable */}
+      <MaterialReactTable table={table} />
+    </div>
   );
 };
 

@@ -4,7 +4,6 @@ import {
   DashboardOutlined,
   UserOutlined,
   CarOutlined,
-  SettingOutlined,
   FileTextOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -26,31 +25,25 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
       key: "dashboard",
       icon: <DashboardOutlined />,
       label: "Dashboard",
-      onClick: () => navigate("/dashboard"),
+      onClick: () => navigate("/owner/dashboard"),
     },
     {
       key: "operators",
       icon: <UserOutlined />,
       label: "Operators",
-      onClick: () => navigate("/operators"),
+      onClick: () => navigate("/owner/operators"),
     },
     {
       key: "vehicles",
       icon: <CarOutlined />,
       label: "Vehicles",
-      onClick: () => navigate("/admin/vehicles"),
+      onClick: () => navigate("/owner/vehicles"),
     },
     {
       key: "reports",
       icon: <FileTextOutlined />,
       label: "Reports",
-      onClick: () => navigate("/admin/reports"),
-    },
-    {
-      key: "settings",
-      icon: <SettingOutlined />,
-      label: "Settings",
-      onClick: () => navigate("/admin/settings"),
+      onClick: () => navigate("/owner/reports"),
     },
   ];
 

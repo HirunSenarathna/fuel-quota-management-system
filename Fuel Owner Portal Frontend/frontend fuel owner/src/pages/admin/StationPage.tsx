@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography } from "antd";
-import StationTable from "../features/stations/StationTable";
+import StationTable from "../../features/stations/StationTable";
 
 const { Title } = Typography;
 

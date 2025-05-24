@@ -1,5 +1,5 @@
 import React from "react";
-import StatCard from "../features/dashboard/StatCard";
+import StatCard from "../../features/dashboard/StatCard";
 import { Row, Col, Typography } from "antd";
 
 const { Title } = Typography;
