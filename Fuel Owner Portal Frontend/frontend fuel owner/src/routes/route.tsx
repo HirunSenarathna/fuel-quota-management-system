@@ -11,7 +11,6 @@ import Operators from "../pages/Operators";
 import StationOwnerRegistration from "../pages/StationOwnerRegistration";
 import VehicleRegistration from "../pages/VehicleRegistration";
 import StationOperatorRegistration from "../pages/StationOperatorRegistration";
-import FuelTransactionPage from "../pages/admin/FuelTransactionPage";
 
 // Layouts
 import AdminLayout from "../layouts/AdminLayout";
@@ -45,10 +44,6 @@ const Router: React.FC = () => {
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/stations" element={<StationPage />} />
-        <Route
-          path="/admin/fuel-transactions"
-          element={<FuelTransactionPage />}
-        />
       </Route>
 
       {/* Station Owner routes */}
