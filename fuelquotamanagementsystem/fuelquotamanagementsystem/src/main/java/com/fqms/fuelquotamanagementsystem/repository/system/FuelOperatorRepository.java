@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FuelOperatorRepository extends JpaRepository<FuelOperator, Integer> {
 
@@ -13,4 +14,6 @@ public interface FuelOperatorRepository extends JpaRepository<FuelOperator, Inte
 
     @Query("SELECT fo FROM FuelOperator fo WHERE fo.station.stationId = :stationId")
     List<FuelOperator> findAllByStationId(@Param("stationId") int stationId);
+
+    Optional<FuelOperator> findByAccountId(int id);
 }

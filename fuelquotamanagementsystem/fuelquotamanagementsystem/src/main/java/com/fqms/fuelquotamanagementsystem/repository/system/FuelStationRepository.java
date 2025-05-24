@@ -15,7 +15,7 @@ public interface FuelStationRepository extends JpaRepository<FuelStation, Intege
     boolean existsFuelStationByLicenseNumberAndCity(String licenseNumber, String city);
 
     @Query("SELECT new com.fqms.fuelquotamanagementsystem.Dtos.RemainingFuelQuantityForStations(" +
-            "fs.stationId, fs.city, fs.licenseNumber, o.fullName, o.phoneNumber, COALESCE(sfq.fuelQuantity, 0)) " +
+            "fs.stationId, fs.city, fs.licenseNumber, o.fullName, o.phoneNumber, sfq.fuelType, COALESCE(sfq.fuelQuantity, 0)) " +
             "FROM FuelStation fs " +
             "JOIN fs.stationOwner o " +
             "LEFT JOIN StationFuelQuantity sfq ON fs.stationId = sfq.stationId")
