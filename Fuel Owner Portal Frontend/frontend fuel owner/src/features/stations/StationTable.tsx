@@ -1,6 +1,10 @@
 import { useMemo, useState, useEffect } from "react";
-import { Table, Spin, Empty } from "antd";
-import type { ColumnsType } from "antd/es/table";
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+  type MRT_ColumnDef,
+} from "material-react-table";
+import { Box, Typography } from "@mui/material";
 import axios from "axios";
 
 // Define the Station data type
@@ -10,7 +14,6 @@ type Station = {
   ownerName: string;
   phoneNumber: string;
   email: string;
-  key?: string;
 };
 
 // Sample data defined outside the component
@@ -56,7 +59,7 @@ const StationTable = () => {
   const [stations, setStations] = useState<Station[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [useRealData, setUseRealData] = useState(true);
+  const [useRealData, setUseRealData] = useState(false); // Set to false for now to use mock data
 
   useEffect(() => {
     const fetchStations = async () => {
@@ -85,7 +88,6 @@ const StationTable = () => {
               ownerName: station.ownerName,
               phoneNumber: station.phoneNumber,
               email: station.email || "N/A",
-              key: station.stationId.toString(),
             }));
 
             if (data && data.length > 0) {
@@ -103,11 +105,7 @@ const StationTable = () => {
         }
 
         // Always use mock data if real data fetch failed or was disabled
-        const formattedMockData = mockStationData.map((station) => ({
-          ...station,
-          key: station.id,
-        }));
-        setStations(formattedMockData);
+        setStations(mockStationData);
         setError(null);
       } catch (err) {
         console.error("Error in fetching station data:", err);
@@ -115,11 +113,7 @@ const StationTable = () => {
 
         // Still try to show mock data even if something went wrong above
         try {
-          const formattedMockData = mockStationData.map((station) => ({
-            ...station,
-            key: station.id,
-          }));
-          setStations(formattedMockData);
+          setStations(mockStationData);
         } catch (mockErr) {
           console.error("Error setting mock data:", mockErr);
         }
@@ -131,58 +125,130 @@ const StationTable = () => {
     fetchStations();
   }, [useRealData]);
 
-  // Define columns
-  const columns: ColumnsType<Station> = useMemo(
+  // Define columns using MRT_ColumnDef
+  const columns = useMemo<MRT_ColumnDef<Station>[]>(
     () => [
       {
-        title: "Station ID",
-        dataIndex: "id",
-        key: "id",
-        width: 120,
+        accessorKey: "id",
+        header: "Station ID",
+        size: 120,
+        enableSorting: true,
+        enableFiltering: true,
       },
       {
-        title: "Location",
-        dataIndex: "location",
-        key: "location",
-        width: 200,
+        accessorKey: "location",
+        header: "Location",
+        size: 200,
+        enableSorting: true,
+        enableFiltering: true,
       },
       {
-        title: "Owner Name",
-        dataIndex: "ownerName",
-        key: "ownerName",
-        width: 150,
+        accessorKey: "ownerName",
+        header: "Owner Name",
+        size: 150,
+        enableSorting: true,
+        enableFiltering: true,
       },
       {
-        title: "Phone Number",
-        dataIndex: "phoneNumber",
-        key: "phoneNumber",
-        width: 150,
+        accessorKey: "phoneNumber",
+        header: "Phone Number",
+        size: 150,
+        enableSorting: true,
+        enableFiltering: true,
       },
       {
-        title: "Email",
-        dataIndex: "email",
-        key: "email",
-        width: 200,
+        accessorKey: "email",
+        header: "Email",
+        size: 200,
+        enableSorting: true,
+        enableFiltering: true,
       },
     ],
     []
   );
 
+  // Create the table instance
+  const table = useMaterialReactTable({
+    columns,
+    data: stations,
+    state: {
+      isLoading,
+    },
+    // Enable all features
+    enableGlobalFilter: true,
+    enablePagination: true,
+    enableSorting: true,
+    enableColumnResizing: true,
+    enableDensityToggle: true,
+    enableFullScreenToggle: true,
+    muiSearchTextFieldProps: {
+      variant: "outlined",
+      placeholder: "Search stations...",
+      size: "small",
+      sx: { minWidth: "300px" },
+    },
+    initialState: {
+      pagination: {
+        pageSize: 10,
+        pageIndex: 0,
+      },
+      density: "comfortable",
+    },
+    paginationDisplayMode: "pages",
+    positionToolbarAlertBanner: "bottom",
+    muiPaginationProps: {
+      color: "primary",
+      shape: "rounded",
+      size: "medium",
+    },
+    muiTablePaperProps: {
+      elevation: 0,
+      sx: {
+        borderRadius: "8px",
+        overflow: "hidden",
+        width: "100%",
+      },
+    },
+    muiTableContainerProps: {
+      sx: {
+        width: "100%",
+      },
+    },
+    muiTableProps: {
+      sx: {
+        width: "100%",
+        tableLayout: "fixed",
+      },
+    },
+    muiTableBodyRowProps: {
+      hover: true,
+    },
+    renderEmptyRowsFallback: () => (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "300px",
+        }}
+      >
+        <Typography variant="h6" color="text.secondary">
+          {error || "No stations found"}
+        </Typography>
+      </Box>
+    ),
+  });
+
   return (
-    <div style={{ padding: "20px" }}>
-      {isLoading ? (
-        <Spin size="large" />
-      ) : stations.length === 0 ? (
-        <Empty description={error || "No stations found"} />
-      ) : (
-        <Table
-          columns={columns}
-          dataSource={stations}
-          pagination={{ pageSize: 10 }}
-          rowKey="id"
-        />
+    <Box sx={{ width: "100%" }}>
+      {error && !stations.length && (
+        <Box sx={{ mb: 2 }}>
+          <Typography color="error">{error}</Typography>
+        </Box>
       )}
-    </div>
+      <MaterialReactTable table={table} />
+    </Box>
   );
 };
 
