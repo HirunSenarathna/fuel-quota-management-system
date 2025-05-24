@@ -2,11 +2,16 @@ package com.fqms.fuelquotamanagementsystem.service.Impl;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.FuelPumpRequestDto;
 import com.fqms.fuelquotamanagementsystem.models.system.FuelTransaction;
+import com.fqms.fuelquotamanagementsystem.models.system.StationFuelQuantity;
 import com.fqms.fuelquotamanagementsystem.models.system.Vehicle;
 import com.fqms.fuelquotamanagementsystem.repository.system.FuelTransactionRepository;
+import com.fqms.fuelquotamanagementsystem.repository.system.StationFuelQuantityRepository;
 import com.fqms.fuelquotamanagementsystem.repository.system.VehicleRepository;
+import com.fqms.fuelquotamanagementsystem.responses.FuelOperatorUserResponseDto;
+import com.fqms.fuelquotamanagementsystem.service.AuthService;
 import com.fqms.fuelquotamanagementsystem.service.FuelService;
 import com.fqms.fuelquotamanagementsystem.service.SmsService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class FuelServiceImpl implements FuelService {
 
@@ -25,11 +31,53 @@ public class FuelServiceImpl implements FuelService {
     private FuelTransactionRepository fuelTransactionRepository;
 
     @Autowired
+    private StationFuelQuantityRepository stationFuelQuantityRepository;
+
+    @Autowired
     private SmsService smsService;
+
+    @Autowired
+    private AuthService authService;
 
     @Override
     public ResponseEntity<String> processFuelPump(FuelPumpRequestDto request) {
+
+        log.info("Fuel Pump Request: {}", request.toString());
+        log.info(String.valueOf(request.getOperatorId()));
+        log.info(String.valueOf(request.getStationId()));
+
         try {
+            // Validate operatorId and stationId
+            if (request.getOperatorId() <= 0 || request.getStationId() <= 0) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("Invalid operatorId or stationId");
+            }
+
+            // Validate fuel type
+            if (request.getFuelType() == null || request.getFuelType().trim().isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("Fuel type is required");
+            }
+
+            // Check station fuel availability
+            StationFuelQuantity stationFuel = stationFuelQuantityRepository
+                    .findByStationIdAndFuelType(request.getStationId(), request.getFuelType());
+
+            if (stationFuel == null) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body("Fuel type '" + request.getFuelType() + "' is not available at this station");
+            }
+
+            // Check if station has sufficient fuel quantity
+            if (stationFuel.getFuelQuantity() < request.getPumpedAmount()) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("Insufficient fuel at station. Available: " + stationFuel.getFuelQuantity() + "L, Requested: " + request.getPumpedAmount() + "L");
+            }
+
             // Find vehicle by vehicle number and chassis number
             Optional<Vehicle> vehicleOpt = vehicleRepository
                     .findByVehicleNumberAndChassisNumber(request.getVehicleNumber(), request.getChassisNumber());
@@ -54,13 +102,21 @@ public class FuelServiceImpl implements FuelService {
             vehicle.setRemainingQuotaLimit(newQuota);
             vehicleRepository.save(vehicle);
 
+            // Reduce station fuel quantity
+            int newStationFuelQuantity = stationFuel.getFuelQuantity() - (int) request.getPumpedAmount();
+            stationFuel.setFuelQuantity(newStationFuelQuantity);
+            stationFuelQuantityRepository.save(stationFuel);
+
             // Create fuel transaction record
             FuelTransaction transaction = new FuelTransaction();
             transaction.setVehicleId(vehicle.getVehicleId());
             transaction.setVehicleNumber(vehicle.getVehicleNumber());
             transaction.setPumpedAmount(request.getPumpedAmount());
             transaction.setRemainingQuota(newQuota);
+            transaction.setOperatorId(request.getOperatorId());
+            transaction.setStationId(request.getStationId());
             transaction.setTransactionDate(LocalDateTime.now());
+            transaction.setFuelType(request.getFuelType());
             fuelTransactionRepository.save(transaction);
 
             // Send SMS notification
@@ -72,13 +128,10 @@ public class FuelServiceImpl implements FuelService {
                     LocalDateTime.now().toString()
             );
 
-
             String phoneNumber = vehicle.getPhone();
 
-            // Check if phone number exists before sending SMS
             if (phoneNumber != null && !phoneNumber.trim().isEmpty()) {
                 boolean smsSent = smsService.sendSms(phoneNumber, message);
-
                 if (smsSent) {
                     return ResponseEntity.ok("Fuel pumped successfully. SMS notification sent.");
                 } else {

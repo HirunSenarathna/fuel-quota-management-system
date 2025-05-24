@@ -16,4 +16,5 @@ public class FuelOperatorUserResponseDto {
     private String fullName;
     private String nic;
     private String contactNo;
+    private int stationId;
 }

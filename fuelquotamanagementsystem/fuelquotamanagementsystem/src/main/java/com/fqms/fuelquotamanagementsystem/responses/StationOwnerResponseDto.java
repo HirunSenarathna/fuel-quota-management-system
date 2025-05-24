@@ -16,4 +16,6 @@ public class StationOwnerResponseDto {
     private String nic;
     private String fullName;
     private String phoneNumber;
+    private int stationId;
+
 }
