@@ -5,139 +5,32 @@ import {
   type MRT_ColumnDef,
 } from "material-react-table";
 import { Box, Typography } from "@mui/material";
-import axios from "axios";
 import { Tag } from "antd";
-
-type Station = {
-  id?: string;
-  stationId: number;
-  city: string;
-  location?: string;
-  licenseNumber: string;
-  ownerName?: string;
-  ownerFullName: string;
-  phoneNumber?: string;
-  ownerPhoneNumber: string;
-  email?: string;
-  fuelType: string;
-  remainingFuelQuantity: number;
-};
-
-// Sample data defined outside the component
-const mockStationData = [
-  {
-    stationId: 1,
-    city: "Colombo",
-    licenseNumber: "CM12345",
-    ownerFullName: "John Smith",
-    ownerPhoneNumber: "+94 77 123 4567",
-    email: "john.smith@fuelstation.com",
-    fuelType: "Petrol",
-    remainingFuelQuantity: 8500,
-  },
-  {
-    stationId: 2,
-    city: "Kandy",
-    licenseNumber: "KA67890",
-    ownerFullName: "Sarah Johnson",
-    ownerPhoneNumber: "+94 71 234 5678",
-    email: "sarah.j@fuelstation.com",
-    fuelType: "Diesel",
-    remainingFuelQuantity: 4200,
-  },
-  {
-    stationId: 3,
-    city: "Chicago",
-    licenseNumber: "CH11223",
-    ownerFullName: "Alice Johnson",
-    ownerPhoneNumber: "555-123-4567",
-    fuelType: "Petrol",
-    remainingFuelQuantity: 7000,
-  },
-  {
-    stationId: 4,
-    city: "Galle",
-    licenseNumber: "GA54321",
-    ownerFullName: "Michael Fernando",
-    ownerPhoneNumber: "+94 76 345 6789",
-    email: "michael.f@fuelstation.com",
-    fuelType: "Petrol",
-    remainingFuelQuantity: 3500,
-  },
-  {
-    stationId: 5,
-    city: "Jaffna",
-    licenseNumber: "JA98765",
-    ownerFullName: "Priya Kamal",
-    ownerPhoneNumber: "+94 75 456 7890",
-    email: "priya.k@fuelstation.com",
-    fuelType: "Diesel",
-    remainingFuelQuantity: 9200,
-  },
-];
+import stationService, { Station } from "../../services/stationService";
 
 const StationTable = () => {
   const [stations, setStations] = useState<Station[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [useRealData, setUseRealData] = useState(false);
 
   useEffect(() => {
     const fetchStations = async () => {
       try {
         setIsLoading(true);
-
-        if (useRealData) {
-          // Set a timeout to simulate slow network
-          const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Request timed out")), 3000)
-          );
-
-          try {
-            const response = await Promise.race([
-              axios.get(
-                "http://localhost:8080/fuel-station/all-remaining-fuel"
-              ),
-              timeoutPromise,
-            ]);
-
-            const data = response.data;
-
-            if (data && data.length > 0) {
-              setStations(data);
-              setError(null);
-              return;
-            } else {
-              throw new Error("No data received from API");
-            }
-          } catch (apiError) {
-            console.warn("API fetch failed, using mock data:", apiError);
-            // Fallback to mock data on API error
-            setUseRealData(false);
-          }
-        }
-
-        // Always use mock data if real data fetch failed or was disabled
-        setStations(mockStationData);
+        const data = await stationService.getAllStations();
+        setStations(data);
         setError(null);
       } catch (err) {
         console.error("Error in fetching station data:", err);
         setError("Failed to load station data");
-
-        try {
-          setStations(mockStationData);
-        } catch (mockErr) {
-          console.error("Error setting mock data:", mockErr);
-        }
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchStations();
-  }, [useRealData]);
+  }, []);
 
-  // Define columns
   const columns = useMemo<MRT_ColumnDef<Station>[]>(
     () => [
       {
@@ -178,9 +71,23 @@ const StationTable = () => {
       {
         accessorKey: "fuelType",
         header: "Fuel Type",
-        size: 100,
+        size: 200,
         enableSorting: true,
         enableFiltering: true,
+        Cell: ({ cell }) => {
+          const value = cell.getValue<string>();
+          return (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography>
+                {value === "Not specified" ? (
+                  <span style={{ color: "#999" }}>Not specified</span>
+                ) : (
+                  value
+                )}
+              </Typography>
+            </Box>
+          );
+        },
       },
       {
         accessorKey: "remainingFuelQuantity",
@@ -192,7 +99,11 @@ const StationTable = () => {
           const value = cell.getValue<number>();
           return (
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography>{value.toLocaleString()}</Typography>
+              <Typography>
+                {value !== undefined && value !== null
+                  ? value.toLocaleString()
+                  : "0"}
+              </Typography>
             </Box>
           );
         },
@@ -204,7 +115,7 @@ const StationTable = () => {
         enableSorting: true,
         enableFiltering: false,
         Cell: ({ row }) => {
-          const remainingFuel = row.original.remainingFuelQuantity;
+          const remainingFuel = row.original.remainingFuelQuantity ?? 0;
           const LOW_FUEL_THRESHOLD = 5000;
 
           // Check if fuel is below threshold
@@ -218,7 +129,7 @@ const StationTable = () => {
     []
   );
 
-  // Create the table instance
+  // Table instance configuration
   const table = useMaterialReactTable({
     columns,
     data: stations,
@@ -311,6 +222,8 @@ const StationTable = () => {
         width: "100%",
         "& .MuiPaper-root": { width: "100%" },
         "& .MuiTable-root": { width: "100%" },
+        maxHeight: "calc(100vh - 200px)",
+        overflow: "auto",
       }}
     >
       {error && !stations.length && (
