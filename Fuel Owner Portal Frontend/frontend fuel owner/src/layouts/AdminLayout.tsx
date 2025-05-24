@@ -37,10 +37,10 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       onClick: () => navigate("/admin/stations"),
     },
     {
-      key: "quotas",
+      key: "transactions",
       icon: <FundOutlined />,
-      label: "Fuel Quotas",
-      onClick: () => navigate("/admin/quotas"),
+      label: "Fuel Transactions",
+      onClick: () => navigate("/admin/fuel-transactions"),
     },
     {
       key: "analytics",
