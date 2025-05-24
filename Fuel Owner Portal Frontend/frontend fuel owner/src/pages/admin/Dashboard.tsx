@@ -1,5 +1,6 @@
 import React from "react";
 import StatCard from "../../features/dashboard/StatCard";
+import FuelQuotaChart from "../../features/dashboard/FuelQuotaChart";
 import { Row, Col, Typography } from "antd";
 
 const { Title } = Typography;
@@ -12,8 +13,8 @@ const Dashboard: React.FC = () => {
       <Title level={4} style={{ marginBottom: "24px" }}>
         Dashboard Overview
       </Title>
-      <Row gutter={[16, 16]}>
-        <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+      <Row gutter={[16, 16]} justify="start">
+        <Col xs={24} sm={12} md={8} lg={8} xl={8}>
           <StatCard
             title="Total Users"
             value={1000}
@@ -26,7 +27,7 @@ const Dashboard: React.FC = () => {
           />
         </Col>
 
-        <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+        <Col xs={24} sm={12} md={8} lg={8} xl={8}>
           <StatCard
             title="Total Quotas"
             value={500}
@@ -39,7 +40,7 @@ const Dashboard: React.FC = () => {
           />
         </Col>
 
-        <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+        <Col xs={24} sm={12} md={8} lg={8} xl={8}>
           <StatCard
             title="Total Vehicles"
             value={200}
@@ -51,18 +52,12 @@ const Dashboard: React.FC = () => {
             valueStyle={{ fontSize: "24px", fontWeight: "bold" }}
           />
         </Col>
+      </Row>
 
-        <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-          <StatCard
-            title="Total Fuel Types"
-            value={5}
-            prefix={<span style={{ color: "#3f8600" }}>+</span>}
-            suffix="fuel types"
-            precision={0}
-            isPositive={true}
-            loading={false}
-            valueStyle={{ fontSize: "24px", fontWeight: "bold" }}
-          />
+      {/* Chart Row */}
+      <Row gutter={[16, 16]} style={{ marginTop: "24px" }}>
+        <Col xs={24}>
+          <FuelQuotaChart title="Fuel Quota Remaining" />
         </Col>
       </Row>
     </div>
