@@ -15,6 +15,8 @@ import {
 
 const VehicleRegistration = () => {
   // State variables for form fields
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [vehicleNumber, setVehicleNumber] = useState('');
   const [chassisNumber, setChassisNumber] = useState('');
   const [vehicleType, setVehicleType] = useState('');
@@ -25,6 +27,8 @@ const VehicleRegistration = () => {
 
   // Reset form inputs
   const clearForm = () => {
+    setUsername('');
+    setPassword('');
     setVehicleNumber('');
     setChassisNumber('');
     setVehicleType('');
@@ -35,26 +39,61 @@ const VehicleRegistration = () => {
     e.preventDefault();
     setMessage(null);
 
-    if (!vehicleNumber || !chassisNumber || !vehicleType || !fuelType) {
+    if (!username || !password || !vehicleNumber || !chassisNumber || !vehicleType || !fuelType) {
       setMessage({ type: 'error', text: 'All fields are required' });
       return;
     }
 
     setLoading(true);
 
-    // Simulated delay
-    setTimeout(() => {
-      setLoading(false);
-      console.log('Vehicle registered:', {
-        vehicleNumber,
-        chassisNumber,
-        vehicleType,
-        fuelType,
-      });
-      setMessage({ type: 'success', text: 'Vehicle registered successfully!' });
+    try {
+      const response = await fetch('http://localhost:8080/vehicle/register', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'image/png', // QR code 
+  },
+  body: JSON.stringify({
+    username,
+    password,
+    vehicleNumber,
+    chassisNumber,
+    vehicleType,
+    fuelType,
+  }),
+});
+
+if (!response.ok) {
+  const errorText = await response.text();
+  throw new Error(errorText || 'Failed to register vehicle');
+}
+
+const blob = await response.blob();
+
+// Extract filename from response headers if available
+const contentDisposition = response.headers.get('Content-Disposition');
+const filenameMatch = contentDisposition?.match(/filename="?([^"]+)"?/);
+const filename = filenameMatch ? filenameMatch[1] : 'vehicle-qr.png';
+
+const url = window.URL.createObjectURL(blob);
+const link = document.createElement('a');
+link.href = url;
+link.download = filename;
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+window.URL.revokeObjectURL(url);
+
+
+      setMessage({ type: 'success', text: 'Vehicle registered successfully! File downloaded.' });
       clearForm();
-    }, 1200);
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message || 'Registration failed' });
+    } finally {
+      setLoading(false);
+    }
   };
+  
 
   return (
     <Box className="signin-box">
@@ -74,6 +113,23 @@ const VehicleRegistration = () => {
           )}
 
           <Box component="form" onSubmit={handleRegister} className="form">
+            <TextField
+              fullWidth
+              required
+              label="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              margin="normal"
+            />
+            <TextField
+              fullWidth
+              required
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              margin="normal"
+            />
             <TextField
               fullWidth
               required
