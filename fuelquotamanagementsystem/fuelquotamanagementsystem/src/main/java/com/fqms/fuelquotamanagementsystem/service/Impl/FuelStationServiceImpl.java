@@ -40,6 +40,7 @@ public class FuelStationServiceImpl implements FuelStationService {
 
     @Autowired
     private RegisteredStationRepository registeredStationRepository;
+
     @Autowired
     private StationFuelQuantityRepository stationFuelQuantityRepository;
 

@@ -61,6 +61,5 @@ public class FuelStationController {
     public List<RemainingFuelQuantityForStations> getRemainingFuelDetailsForAllStations() {
         return fuelStationService.getAllStationFuelDetails();
     }
-
 }
 
