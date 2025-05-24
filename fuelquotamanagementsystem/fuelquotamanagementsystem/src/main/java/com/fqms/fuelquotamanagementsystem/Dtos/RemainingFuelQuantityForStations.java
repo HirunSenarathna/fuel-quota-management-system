@@ -13,5 +13,6 @@ public class RemainingFuelQuantityForStations {
     private String LicenseNumber;
     private String ownerName;
     private String phoneNumber;
+    private String fuelType;
     private int stationFuelQuantity;
 }

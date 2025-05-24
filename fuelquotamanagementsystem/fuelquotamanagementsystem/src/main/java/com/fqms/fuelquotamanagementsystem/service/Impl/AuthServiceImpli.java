@@ -1,8 +1,17 @@
 package com.fqms.fuelquotamanagementsystem.service.Impl;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.LoginUserDto;
+import com.fqms.fuelquotamanagementsystem.models.system.Vehicle;
+import com.fqms.fuelquotamanagementsystem.repository.system.VehicleRepository;
+import com.fqms.fuelquotamanagementsystem.responses.FuelOperatorUserResponseDto;
+import com.fqms.fuelquotamanagementsystem.responses.StationOwnerResponseDto;
 import com.fqms.fuelquotamanagementsystem.models.system.Account;
+import com.fqms.fuelquotamanagementsystem.models.system.FuelOperator;
+import com.fqms.fuelquotamanagementsystem.models.system.FuelStationOwner;
 import com.fqms.fuelquotamanagementsystem.repository.system.AccountRepository;
+import com.fqms.fuelquotamanagementsystem.repository.system.FuelOperatorRepository;
+import com.fqms.fuelquotamanagementsystem.repository.system.FuelStationOwnerRepository;
+import com.fqms.fuelquotamanagementsystem.responses.VehicleResponseDto;
 import com.fqms.fuelquotamanagementsystem.service.AuthService;
 import com.fqms.fuelquotamanagementsystem.shared.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +31,12 @@ public class AuthServiceImpli implements AuthService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private FuelStationOwnerRepository fuelStationOwnerRepository;
+    @Autowired
+    private FuelOperatorRepository fuelOperatorRepository;
+    @Autowired
+    private VehicleRepository vehicleRepository;
 
     public AuthServiceImpli(AccountRepository accountRepository, AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -55,43 +70,56 @@ public class AuthServiceImpli implements AuthService {
         Account account = accountRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        // Check if the user is an Employee
-//        Optional<Employee> employee = employeeRepository.findByAccountId(account.getId());
-//        if (employee.isPresent()) {
-//            Employee emp = employee.get();
-//            // Return the EmployeeResponseDto
-//            return Optional.of(new EmployeeResponseDto(
-//                    account.getId(),
-//                    account.getUsername(),
-//                    account.getPassword(),
-//                    account.getRole(),
-//                    emp.getFirstName(),
-//                    emp.getLastName(),
-//                    emp.getAddress(),
-//                    emp.getContactNo(),
-//                    emp.getStatus(),
-//                    emp.getProfilePic()
-//            ));
-//        }
-//
-//        // Check if the user is a School
-//        Optional<School> school = schoolRepository.findByAccountId(account.getId());
-//        if (school.isPresent()) {
-//            School sch = school.get();
-//            // Return the SchoolResponseDto
-//            return Optional.of(new SchoolResponseDto(
-//                    account.getId(),
-//                    account.getUsername(),
-//                    account.getPassword(),
-//                    account.getRole(),
-//                    sch.getName(),
-//                    sch.getAddress(),
-//                    sch.getContactNo(),
-//                    sch.getEmail(),
-//                    sch.getPrincipleName(),
-//                    sch.getPrincipleSignature()
-//            ));
-//        }
+        // Check if the user is an StationOwnerResponseDto
+        Optional<FuelStationOwner> stationOwner = fuelStationOwnerRepository.findByAccountId(account.getId());
+        if (stationOwner.isPresent()) {
+            FuelStationOwner stOwner = stationOwner.get();
+            // Return the StationOwnerResponseDto
+            return Optional.of(new StationOwnerResponseDto(
+                    account.getId(),
+                    account.getUsername(),
+                    account.getPassword(),
+                    account.getRole(),
+                    stOwner.getOwnerId(),
+                    stOwner.getNic(),
+                    stOwner.getFullName(),
+                    stOwner.getPhoneNumber()
+            ));
+        }
+
+        // Check if the user is a FuelOperator
+        Optional<FuelOperator> fuelOperator = fuelOperatorRepository.findByAccountId(account.getId());
+        if (fuelOperator.isPresent()) {
+            FuelOperator flOperator = fuelOperator.get();
+            // Return the FuelOperator
+            return Optional.of(new FuelOperatorUserResponseDto(
+                    account.getId(),
+                    account.getUsername(),
+                    account.getPassword(),
+                    account.getRole(),
+                    flOperator.getOperatorId(),
+                    flOperator.getFullName(),
+                    flOperator.getNic(),
+                    flOperator.getPhoneNumber()
+            ));
+        }
+
+        Vehicle vehicle = vehicleRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        if (vehicle != null) {
+            return Optional.of(new VehicleResponseDto(
+                    vehicle.getUsername(),
+                    vehicle.getPassword(),
+                    vehicle.getVehicleId(),
+                    vehicle.getVehicleNumber(),
+                    vehicle.getChassisNumber(),
+                    vehicle.getVehicleType(),
+                    vehicle.getPhone(),
+                    vehicle.getFuelType(),
+                    vehicle.getRemainingQuotaLimit()
+            ));
+        }
 
         // If no match is found, return an empty Optional
         throw new NotFoundException("No matching user found for the current authentication. Please ensure your credentials are correct and try again.");
