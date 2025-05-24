@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
+import bgImage from "../assets/bgimg.jpg"; // adjust the path if needed
 
 type FormData = {
+  username: string;
+  password: string;
   fullName: string;
   nic: string;
   licenseNo: string;
@@ -13,12 +16,14 @@ type FormData = {
 };
 
 const StationOwnerRegistration: React.FC = () => {
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const {
     register,
     handleSubmit,
     control,
-    reset, // Include reset
-    formState: { errors, isSubmitSuccessful },
+    reset,
+    formState: { errors },
   } = useForm<FormData>();
 
   const [cityOptions, setCityOptions] = useState<
@@ -26,32 +31,86 @@ const StationOwnerRegistration: React.FC = () => {
   >([]);
 
   useEffect(() => {
-    const staticCities = [
-      { label: "Colombo", value: "Colombo" },
-      { label: "Kandy", value: "Kandy" },
-      { label: "Galle", value: "Galle" },
-      { label: "Matara", value: "Matara" },
-      { label: "Jaffna", value: "Jaffna" },
-      { label: "Kurunegala", value: "Kurunegala" },
-      { label: "Anuradhapura", value: "Anuradhapura" },
-      { label: "Batticaloa", value: "Batticaloa" },
-      { label: "Trincomalee", value: "Trincomalee" },
-      { label: "Negombo", value: "Negombo" },
-    ];
-    setCityOptions(staticCities);
+    const fetchCities = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8080/fuel-station/cities"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch cities");
+        }
+        const cities = await response.json();
+        const options = cities.map((city: string) => ({
+          label: city,
+          value: city,
+        }));
+        setCityOptions(options);
+      } catch (error) {
+        console.error("Failed to load cities:", error);
+      }
+    };
+
+    fetchCities();
   }, []);
 
-  const onSubmit = (data: FormData) => {
-    console.log("Form Data:", data);
-    alert("Registration Successful!");
-    reset(); // Clear form fields after successful submission
+  const onSubmit = async (data: FormData) => {
+    try {
+      setIsSuccess(false);
+      const payload = {
+        username: data.username,
+        password: data.password,
+        fullName: data.fullName,
+        nic: data.nic,
+        licenseNumber: data.licenseNo, // match Java field name
+        addressLine1: data.addressLine1,
+        addressLine2: data.addressLine2,
+        city: data.city,
+        phoneNumber: data.phone,
+      };
+
+      console.log("Sending payload:", payload);
+      const response = await fetch(
+        "http://localhost:8080/fuel-station/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Registration failed: Server returned an error");
+      }
+
+      const text = await response.text(); // handle plain text response
+      console.log("Response text:", text);
+
+      if (text.toLowerCase().includes("success")) {
+        setIsSuccess(true);
+        alert("Registration successful!");
+        reset();
+      } else {
+        throw new Error(text || "Registration failed");
+      }
+    } catch (error) {
+      setIsSuccess(false);
+      console.error("Form submission error:", error);
+      const message =
+        error instanceof Error ? error.message : "Unknown error occurred";
+      alert("Error submitting form: " + message);
+    }
   };
 
   const formContainerStyle: React.CSSProperties = {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "start",
+    padding: "32px 16px",
     minHeight: "100vh",
+    overflowY: "auto",
+    backgroundImage: `url(${bgImage})`,
     backgroundColor: "transparent",
     backgroundSize: "cover",
   };
@@ -66,6 +125,8 @@ const StationOwnerRegistration: React.FC = () => {
     borderRadius: "12px",
     boxShadow: "0 0 20px rgba(0,0,0,0.2)",
     color: "#1f2937",
+    maxHeight: "calc(100vh - 128px)", // Keeps form height within viewport + padding
+    overflowY: "auto", // Make form scrollable itself if needed
   };
 
   const labelStyle: React.CSSProperties = {
@@ -134,7 +195,6 @@ const StationOwnerRegistration: React.FC = () => {
               <p style={errorStyle}>{errors.fullName.message}</p>
             )}
           </div>
-
           <div style={{ marginBottom: "16px" }}>
             <label style={labelStyle}>Owner's NIC Number</label>
             <input
@@ -159,7 +219,6 @@ const StationOwnerRegistration: React.FC = () => {
             />
             {errors.nic && <p style={errorStyle}>{errors.nic.message}</p>}
           </div>
-
           <div style={{ marginBottom: "16px" }}>
             <label style={labelStyle}>Station License Number</label>
             <input
@@ -173,7 +232,6 @@ const StationOwnerRegistration: React.FC = () => {
               <p style={errorStyle}>{errors.licenseNo.message}</p>
             )}
           </div>
-
           <div style={{ marginBottom: "16px" }}>
             <label style={labelStyle}>Address Line 1</label>
             <input
@@ -187,7 +245,6 @@ const StationOwnerRegistration: React.FC = () => {
               <p style={errorStyle}>{errors.addressLine1.message}</p>
             )}
           </div>
-
           <div style={{ marginBottom: "16px" }}>
             <label style={labelStyle}>Address Line 2</label>
             <input
@@ -197,7 +254,6 @@ const StationOwnerRegistration: React.FC = () => {
               placeholder="(Optional)"
             />
           </div>
-
           <div style={{ marginBottom: "16px" }}>
             <label style={labelStyle}>City</label>
             <Controller
@@ -221,7 +277,6 @@ const StationOwnerRegistration: React.FC = () => {
             />
             {errors.city && <p style={errorStyle}>{errors.city.message}</p>}
           </div>
-
           <div style={{ marginBottom: "16px" }}>
             <label style={labelStyle}>Phone Number</label>
             <input
@@ -234,18 +289,45 @@ const StationOwnerRegistration: React.FC = () => {
                 },
               })}
               style={inputStyle}
-              placeholder="0######### (Do not use +94)"
+              placeholder="0#########"
             />
             {errors.phone && <p style={errorStyle}>{errors.phone.message}</p>}
           </div>
-
+          <div style={{ marginBottom: "16px" }}>
+            <label style={labelStyle}>Username</label>
+            <input
+              type="text"
+              {...register("username", {
+                required: "Username is required",
+              })}
+              style={inputStyle}
+            />
+            {errors.username && (
+              <p style={errorStyle}>{errors.username.message}</p>
+            )}
+          </div>
+          <div style={{ marginBottom: "16px" }}>
+            <label style={labelStyle}>Password</label>
+            <input
+              type="password"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+              })}
+              style={inputStyle}
+              placeholder="At least 6 characters"
+            />
+            {errors.password && (
+              <p style={errorStyle}>{errors.password.message}</p>
+            )}
+          </div>
           <button type="submit" style={buttonStyle}>
             Register
-          </button>
-
-          {isSubmitSuccessful && (
-            <p style={successStyle}>Form submitted successfully!</p>
-          )}
+          </button>{" "}
+          {isSuccess && <p style={successStyle}>Registration successful!</p>}
         </form>
       </div>
     </div>

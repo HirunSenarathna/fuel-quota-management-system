@@ -120,7 +120,7 @@ const SignIn: React.FC = () => {
             <Box className="signup-link">
               <Typography variant="body2">
                 Don't have an account?{' '}
-                <Link href="#" variant="body2">
+                <Link href="/signup" variant="body2">
                   Sign up
                 </Link>
               </Typography>
