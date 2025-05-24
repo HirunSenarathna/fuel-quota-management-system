@@ -1,8 +1,10 @@
 package com.fqms.fuelquotamanagementsystem.service.Impl;
 
 import com.fqms.fuelquotamanagementsystem.Dtos.VehicleRegistrationRequestDto;
+import com.fqms.fuelquotamanagementsystem.models.system.Account;
 import com.fqms.fuelquotamanagementsystem.models.system.Vehicle;
 import com.fqms.fuelquotamanagementsystem.repository.mock.RegisteredVehicleRepository;
+import com.fqms.fuelquotamanagementsystem.repository.system.AccountRepository;
 import com.fqms.fuelquotamanagementsystem.repository.system.VehicleRepository;
 import com.fqms.fuelquotamanagementsystem.service.VehicleService;
 import com.google.zxing.WriterException;
@@ -11,7 +13,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.fqms.fuelquotamanagementsystem.shared.ApplicationConstants;
 
 import java.io.IOException;
 
@@ -24,6 +28,12 @@ public class VehicleServiceImpl implements VehicleService {
     @Autowired
     private VehicleRepository vehicleRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AccountRepository accountRepository;
+
     public boolean isRegisteredVehicle(String vehicleNumber, String chassisNumber) {
         return registeredVehicleRepository.findByVehicleNumberAndChassisNumber(vehicleNumber, chassisNumber).isPresent();
     }
@@ -31,13 +41,18 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public ResponseEntity<byte[]> registerVehicle(VehicleRegistrationRequestDto request) {
 
+        Account account = new Account();
+        account.setUsername(request.getUsername());
+        account.setPassword(passwordEncoder.encode(request.getPassword()));
+        account.setRole( ApplicationConstants.ROLES.ROLE_VEHICLE.name());
+        Account savedAccount = accountRepository.save(account);
+
         Vehicle vehicle = new Vehicle();
-        vehicle.setUsername(request.getUsername());
-        vehicle.setPassword(request.getPassword());
         vehicle.setVehicleNumber(request.getVehicleNumber());
         vehicle.setChassisNumber(request.getChassisNumber());
         vehicle.setVehicleType(request.getVehicleType());
         vehicle.setFuelType(request.getFuelType());
+        vehicle.setPhone(request.getPhone());
         vehicle.setRemainingQuotaLimit(20.00);
 
         // Step 1: Check if it's a registered vehicle from the mock database

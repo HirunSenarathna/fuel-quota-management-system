@@ -104,20 +104,22 @@ public class AuthServiceImpli implements AuthService {
             ));
         }
 
-        Vehicle vehicle = vehicleRepository.findByUsernameIgnoreCase(username)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
-        if (vehicle != null) {
+        Optional<Vehicle> vehicle = vehicleRepository.findByAccountId(account.getId());
+        if (vehicle.isPresent()) {
+            Vehicle vehicleObj = vehicle.get();
+            // Return the FuelOperator
             return Optional.of(new VehicleResponseDto(
-                    vehicle.getUsername(),
-                    vehicle.getPassword(),
-                    vehicle.getVehicleId(),
-                    vehicle.getVehicleNumber(),
-                    vehicle.getChassisNumber(),
-                    vehicle.getVehicleType(),
-                    vehicle.getPhone(),
-                    vehicle.getFuelType(),
-                    vehicle.getRemainingQuotaLimit()
+                    account.getId(),
+                    account.getUsername(),
+                    account.getPassword(),
+                    account.getRole(),
+                    vehicleObj.getVehicleId(),
+                    vehicleObj.getVehicleNumber(),
+                    vehicleObj.getChassisNumber(),
+                    vehicleObj.getVehicleType(),
+                    vehicleObj.getPhone(),
+                    vehicleObj.getFuelType(),
+                    vehicleObj.getRemainingQuotaLimit()
             ));
         }
 

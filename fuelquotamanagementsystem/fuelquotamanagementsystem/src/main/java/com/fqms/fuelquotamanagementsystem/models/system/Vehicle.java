@@ -17,12 +17,14 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int vehicleId;
 
-    private String username;
-    private String password;
     private String vehicleNumber;
     private String chassisNumber;
     private String vehicleType;
     private String fuelType;
     private String phone;
     private Double remainingQuotaLimit;
+
+    @OneToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
 }
