@@ -14,4 +14,7 @@ public class FuelPumpRequestDto {
     private String vehicleNumber;
     private String chassisNumber;
     private double pumpedAmount;
+    private int operatorId;
+    private int stationId;
+    private String fuelType;
 }
