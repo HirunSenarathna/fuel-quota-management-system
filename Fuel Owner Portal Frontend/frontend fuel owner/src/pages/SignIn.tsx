@@ -10,7 +10,7 @@ import {
   CircularProgress, 
   Alert
 } from '@mui/material';
-import { login } from '../services/authService';
+import { login, navigateBasedOnRole } from '../services/authService';
 import '../styles/SignIn.css';
 
 interface Credentials {
@@ -25,6 +25,7 @@ const SignIn: React.FC = () => {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<boolean>(false); 
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,20 +39,31 @@ const SignIn: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+    setSuccess(false);
+    console.log('Submitting login form with credentials:', credentials); 
   
     try {
       const response = await login(credentials);
-      console.log('Login successful!', response);
+      // console.log('Login successful! Response:', response); 
   
       // Save token to localStorage
-      localStorage.setItem('token', response.accessToken);
+      localStorage.setItem('token', response.access_token);
+      // console.log('Token saved to localStorage:', response.access_token); 
+
+      setSuccess(true);
+
+      setTimeout(() => {
+        console.log('Navigating based on role...');
+        navigateBasedOnRole(response.access_token);
+      }, 5000);
   
-      // Redirect to dashboard
-      window.location.href = '/dashboard';
+      navigateBasedOnRole(response.access_token);
     } catch (err: any) {
+      console.error('Login failed:', err.message); // Log the error
       setError(err.message);
     } finally {
       setIsLoading(false);
+      console.log('Login process completed'); // Log completion
     }
   };
 
@@ -69,6 +81,12 @@ const SignIn: React.FC = () => {
           {error && (
             <Alert severity="error" className="alert">
               {error}
+            </Alert>
+          )}
+
+          {success && (
+            <Alert severity="success" className="alert">
+              Login successful!
             </Alert>
           )}
 
