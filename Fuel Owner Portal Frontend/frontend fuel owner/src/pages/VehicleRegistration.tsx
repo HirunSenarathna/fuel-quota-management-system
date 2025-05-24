@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import bgImage from '../assets/bgimg.jpg'; // ← adjust the path to your background image
 import '../styles/SignIn.css';
 
 import {
@@ -13,8 +14,19 @@ import {
   MenuItem,
 } from '@mui/material';
 
+const formContainerStyle: React.CSSProperties = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'start',
+  padding: '32px 16px',
+  minHeight: '100vh',
+  overflowY: 'auto',
+  backgroundImage: `url(${bgImage})`,
+  backgroundColor: 'transparent',
+  backgroundSize: 'cover',
+};
+
 const VehicleRegistration = () => {
-  // State variables for form fields
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [vehicleNumber, setVehicleNumber] = useState('');
@@ -25,7 +37,6 @@ const VehicleRegistration = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
 
-  // Reset form inputs
   const clearForm = () => {
     setUsername('');
     setPassword('');
@@ -48,42 +59,39 @@ const VehicleRegistration = () => {
 
     try {
       const response = await fetch('http://localhost:8080/vehicle/register', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'image/png', // QR code 
-  },
-  body: JSON.stringify({
-    username,
-    password,
-    vehicleNumber,
-    chassisNumber,
-    vehicleType,
-    fuelType,
-  }),
-});
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'image/png',
+        },
+        body: JSON.stringify({
+          username,
+          password,
+          vehicleNumber,
+          chassisNumber,
+          vehicleType,
+          fuelType,
+        }),
+      });
 
-if (!response.ok) {
-  const errorText = await response.text();
-  throw new Error(errorText || 'Failed to register vehicle');
-}
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Failed to register vehicle');
+      }
 
-const blob = await response.blob();
+      const blob = await response.blob();
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filenameMatch = contentDisposition?.match(/filename="?([^"]+)"?/);
+      const filename = filenameMatch ? filenameMatch[1] : 'vehicle-qr.png';
 
-// Extract filename from response headers if available
-const contentDisposition = response.headers.get('Content-Disposition');
-const filenameMatch = contentDisposition?.match(/filename="?([^"]+)"?/);
-const filename = filenameMatch ? filenameMatch[1] : 'vehicle-qr.png';
-
-const url = window.URL.createObjectURL(blob);
-const link = document.createElement('a');
-link.href = url;
-link.download = filename;
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-window.URL.revokeObjectURL(url);
-
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
 
       setMessage({ type: 'success', text: 'Vehicle registered successfully! File downloaded.' });
       clearForm();
@@ -93,12 +101,11 @@ window.URL.revokeObjectURL(url);
       setLoading(false);
     }
   };
-  
 
   return (
-    <Box className="signin-box">
+    <Box style={formContainerStyle}>
       <Container maxWidth="xs">
-        <Paper className="signin-paper">
+        <Paper className="signin-paper" sx={{ p: 3 }}>
           <Typography variant="h4" component="h2" fontWeight="bold">
             Register Vehicle
           </Typography>

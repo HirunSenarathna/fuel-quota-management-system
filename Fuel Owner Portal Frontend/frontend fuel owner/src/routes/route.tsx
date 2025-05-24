@@ -11,6 +11,7 @@ import Operators from "../pages/Operators";
 import StationOwnerRegistration from "../pages/StationOwnerRegistration";
 import VehicleRegistration from "../pages/VehicleRegistration";
 import StationOperatorRegistration from "../pages/StationOperatorRegistration";
+import AddStockForm from "../pages/AddFuelStock";
 
 // Layouts
 import AdminLayout from "../layouts/AdminLayout";
@@ -61,6 +62,7 @@ const Router: React.FC = () => {
         <Route path="/owner/dashboard" element={<FuelOwnerDashboard />} />
         <Route path="/owner/operators" element={<Operators />} />
         <Route path="/owner/vehicles" element={<VehicleRegistration />} />
+        <Route path="/owner/add-fuel-stock" element={<AddStockForm />} />
       </Route>
 
       {/* Redirects */}
