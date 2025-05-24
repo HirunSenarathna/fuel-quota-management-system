@@ -15,6 +15,7 @@ import StationOperatorRegistration from "../pages/StationOperatorRegistration";
 // Layouts
 import AdminLayout from "../layouts/AdminLayout";
 import FuelOwnerLayout from "../layouts/FuelOwnerLayout";
+import ReportPage from "../pages/admin/ReportPage";
 
 const Router: React.FC = () => {
   return (
@@ -44,6 +45,7 @@ const Router: React.FC = () => {
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/stations" element={<StationPage />} />
+        <Route path="/admin/reports" element={<ReportPage />} />
       </Route>
 
       {/* Station Owner routes */}

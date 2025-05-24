@@ -1,19 +1,12 @@
 import { useMemo, useState, useEffect } from "react";
-import { Table, Spin, Empty, Typography } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import axios from "axios";
-
-const { Text } = Typography;
-
-// Define the Station data type
-type Station = {
-  id: string;
-  location: string;
-  ownerName: string;
-  phoneNumber: string;
-  email: string;
-  key?: string;
-};
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+  type MRT_ColumnDef,
+} from "material-react-table";
+import { Box, Typography } from "@mui/material";
+import { Tag } from "antd";
+import stationService, { Station } from "../../services/stationService";
 
 const StationTable = () => {
   const [stations, setStations] = useState<Station[]>([]);
@@ -24,59 +17,12 @@ const StationTable = () => {
     const fetchStations = async () => {
       try {
         setIsLoading(true);
-        // Replace with your actual API endpoint
-        const response = await axios.get("/api/stations");
-        const data = response.data.map((station: Station) => ({
-          ...station,
-          key: station.id,
-        }));
+        const data = await stationService.getAllStations();
         setStations(data);
         setError(null);
       } catch (err) {
-        console.error("Error fetching stations:", err);
+        console.error("Error in fetching station data:", err);
         setError("Failed to load station data");
-
-        // Fallback to sample data if API call fails
-        const sampleData = [
-          {
-            id: "ST001",
-            location: "Colombo, Main Street",
-            ownerName: "John Smith",
-            phoneNumber: "+94 77 123 4567",
-            email: "john.smith@fuelstation.com",
-          },
-          {
-            id: "ST002",
-            location: "Kandy, Temple Road",
-            ownerName: "Sarah Johnson",
-            phoneNumber: "+94 71 234 5678",
-            email: "sarah.j@fuelstation.com",
-          },
-          {
-            id: "ST003",
-            location: "Galle, Marine Drive",
-            ownerName: "Michael Fernando",
-            phoneNumber: "+94 76 345 6789",
-            email: "michael.f@fuelstation.com",
-          },
-          {
-            id: "ST004",
-            location: "Jaffna, Hospital Road",
-            ownerName: "Priya Kamal",
-            phoneNumber: "+94 75 456 7890",
-            email: "priya.k@fuelstation.com",
-          },
-          {
-            id: "ST005",
-            location: "Negombo, Beach Road",
-            ownerName: "David Perera",
-            phoneNumber: "+94 78 567 8901",
-            email: "david.p@fuelstation.com",
-          },
-        ];
-        setStations(
-          sampleData.map((station) => ({ ...station, key: station.id }))
-        );
       } finally {
         setIsLoading(false);
       }
@@ -85,59 +31,208 @@ const StationTable = () => {
     fetchStations();
   }, []);
 
-  // Define columns
-  const columns: ColumnsType<Station> = useMemo(
+  const columns = useMemo<MRT_ColumnDef<Station>[]>(
     () => [
       {
-        title: "Station ID",
-        dataIndex: "id",
-        key: "id",
-        width: 120,
+        accessorKey: "stationId",
+        header: "Station ID",
+        size: 90,
+        enableSorting: true,
+        enableFiltering: true,
       },
       {
-        title: "Location",
-        dataIndex: "location",
-        key: "location",
-        width: 200,
+        accessorKey: "city",
+        header: "Location",
+        size: 120,
+        enableSorting: true,
+        enableFiltering: true,
       },
       {
-        title: "Owner Name",
-        dataIndex: "ownerName",
-        key: "ownerName",
-        width: 150,
+        accessorKey: "licenseNumber",
+        header: "License No.",
+        size: 120,
+        enableSorting: true,
+        enableFiltering: true,
       },
       {
-        title: "Phone Number",
-        dataIndex: "phoneNumber",
-        key: "phoneNumber",
-        width: 150,
+        accessorKey: "ownerFullName",
+        header: "Owner Name",
+        size: 150,
+        enableSorting: true,
+        enableFiltering: true,
       },
       {
-        title: "Email",
-        dataIndex: "email",
-        key: "email",
-        width: 200,
+        accessorKey: "ownerPhoneNumber",
+        header: "Phone Number",
+        size: 140,
+        enableSorting: true,
+        enableFiltering: true,
+      },
+      {
+        accessorKey: "fuelType",
+        header: "Fuel Type",
+        size: 200,
+        enableSorting: true,
+        enableFiltering: true,
+        Cell: ({ cell }) => {
+          const value = cell.getValue<string>();
+          return (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography>
+                {value === "Not specified" ? (
+                  <span style={{ color: "#999" }}>Not specified</span>
+                ) : (
+                  value
+                )}
+              </Typography>
+            </Box>
+          );
+        },
+      },
+      {
+        accessorKey: "remainingFuelQuantity",
+        header: "Remaining Fuel (L)",
+        size: 140,
+        enableSorting: true,
+        enableFiltering: false,
+        Cell: ({ cell }) => {
+          const value = cell.getValue<number>();
+          return (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography>
+                {value !== undefined && value !== null
+                  ? value.toLocaleString()
+                  : "0"}
+              </Typography>
+            </Box>
+          );
+        },
+      },
+      {
+        id: "status",
+        header: "Status",
+        size: 100,
+        enableSorting: true,
+        enableFiltering: false,
+        Cell: ({ row }) => {
+          const remainingFuel = row.original.remainingFuelQuantity ?? 0;
+          const LOW_FUEL_THRESHOLD = 5000;
+
+          // Check if fuel is below threshold
+          if (remainingFuel < LOW_FUEL_THRESHOLD) {
+            return <Tag color="error">Low Quota</Tag>;
+          }
+          return <Tag color="success">Sufficient</Tag>;
+        },
       },
     ],
     []
   );
 
+  // Table instance configuration
+  const table = useMaterialReactTable({
+    columns,
+    data: stations,
+    state: {
+      isLoading,
+    },
+    // Enable all features
+    enableGlobalFilter: true,
+    enablePagination: true,
+    enableSorting: true,
+    enableColumnResizing: true,
+    enableDensityToggle: true,
+    enableFullScreenToggle: true,
+    layoutMode: "grid",
+    displayColumnDefOptions: {
+      "mrt-row-expand": {
+        size: 50,
+      },
+    },
+    muiSearchTextFieldProps: {
+      variant: "outlined",
+      placeholder: "Search stations...",
+      size: "small",
+      sx: { minWidth: "300px" },
+    },
+    initialState: {
+      pagination: {
+        pageSize: 10,
+        pageIndex: 0,
+      },
+      density: "comfortable",
+    },
+    paginationDisplayMode: "pages",
+    positionToolbarAlertBanner: "bottom",
+    muiPaginationProps: {
+      color: "primary",
+      shape: "rounded",
+      size: "medium",
+    },
+    muiTablePaperProps: {
+      elevation: 0,
+      sx: {
+        borderRadius: "8px",
+        overflow: "hidden",
+        width: "100%",
+      },
+    },
+    muiTableContainerProps: {
+      sx: {
+        width: "100%",
+        overflowX: "auto",
+      },
+    },
+    muiTableProps: {
+      sx: {
+        width: "100%",
+        tableLayout: "fixed",
+      },
+    },
+    muiTableBodyRowProps: {
+      hover: true,
+    },
+    muiTableHeadRowProps: {
+      sx: {
+        "& th": {
+          backgroundColor: "#fafafa",
+        },
+      },
+    },
+    renderEmptyRowsFallback: () => (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "300px",
+        }}
+      >
+        <Typography variant="h6" color="text.secondary">
+          {error || "No stations found"}
+        </Typography>
+      </Box>
+    ),
+  });
+
   return (
-    <div style={{ padding: "20px" }}>
-      {isLoading ? (
-        <Spin size="large" />
-      ) : error ? (
-        <Text type="danger">{error}</Text>
-      ) : stations.length === 0 ? (
-        <Empty description="No stations found" />
-      ) : (
-        <Table
-          columns={columns}
-          dataSource={stations}
-          pagination={{ pageSize: 10 }}
-        />
+    <Box
+      sx={{
+        width: "100%",
+        "& .MuiPaper-root": { width: "100%" },
+        "& .MuiTable-root": { width: "100%" },
+        maxHeight: "calc(100vh - 200px)",
+        overflow: "auto",
+      }}
+    >
+      {error && !stations.length && (
+        <Box sx={{ mb: 2 }}>
+          <Typography color="error">{error}</Typography>
+        </Box>
       )}
-    </div>
+      <MaterialReactTable table={table} />
+    </Box>
   );
 };
 

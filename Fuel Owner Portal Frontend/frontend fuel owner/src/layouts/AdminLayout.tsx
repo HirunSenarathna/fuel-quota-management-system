@@ -6,7 +6,6 @@ import {
   IeOutlined,
   LogoutOutlined,
   HomeOutlined,
-  FundOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme, Button, Dropdown, Space, Avatar } from "antd";
 import type { MenuProps } from "antd";
@@ -35,12 +34,6 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       icon: <HomeOutlined />,
       label: "Stations",
       onClick: () => navigate("/admin/stations"),
-    },
-    {
-      key: "quotas",
-      icon: <FundOutlined />,
-      label: "Fuel Quotas",
-      onClick: () => navigate("/admin/quotas"),
     },
     {
       key: "analytics",
@@ -141,7 +134,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <Content
           style={{
             margin: "24px 24px 0",
-            overflow: "initial",
+            overflow: "auto",
             width: "auto",
           }}
         >
@@ -152,6 +145,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
               boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+              overflowY: "auto",
             }}
           >
             {children}
