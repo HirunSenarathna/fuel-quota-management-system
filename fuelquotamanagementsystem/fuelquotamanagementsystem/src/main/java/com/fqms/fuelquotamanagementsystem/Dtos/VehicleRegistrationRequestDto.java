@@ -13,5 +13,6 @@ public class VehicleRegistrationRequestDto {
     private String vehicleNumber;
     private String chassisNumber;
     private String vehicleType;
+    private String phone;
     private String fuelType;
 }
