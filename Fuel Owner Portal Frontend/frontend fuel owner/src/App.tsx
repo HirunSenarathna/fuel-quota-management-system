@@ -1,30 +1,31 @@
-// File: src/App.tsx
-import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SignIn from './pages/SignIn';
-import FuelOwnerDashboard from './pages/FuelOwnerDashboard';
+import React from "react";
+import { ConfigProvider, theme } from "antd";
+import { BrowserRouter } from "react-router-dom";
+import Router from "./routes/route";
+import "./App.css";
 
-import StationOwnerRegistration from './pages/StationOwnerRegistration';
-import VehicleRegistration from './pages/VehicleRegistration';
-import Operators from './pages/Operators';
-import SignUp from './pages/SignUp';
-import StationOperatorRegistration from './pages/StationOperatorRegistration';
-
-function App() {
+const App: React.FC = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<SignIn />} />
-        <Route path="/dashboard" element={<FuelOwnerDashboard />} />
-
-        <Route path="/station-owner-registration" element={<StationOwnerRegistration />} />
-        <Route path="/vehicle-registration" element={<VehicleRegistration />} />
-        <Route path="/station-operator-registration" element={<StationOperatorRegistration />} />
-        <Route path="/operators" element={<Operators />} />
-        <Route path="/signup" element={<SignUp />} />
-      </Routes>
-    </Router>
+    <BrowserRouter>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "#00b96b",
+            borderRadius: 4,
+          },
+          components: {
+            Button: {
+              colorPrimary: "#00b96b",
+              algorithm: true,
+            },
+          },
+          algorithm: theme.defaultAlgorithm,
+        }}
+      >
+        <Router />
+      </ConfigProvider>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
