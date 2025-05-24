@@ -6,52 +6,73 @@ import {
 } from "material-react-table";
 import { Box, Typography } from "@mui/material";
 import axios from "axios";
+import { Tag } from "antd";
 
-// Define the Station data type
 type Station = {
-  id: string;
-  location: string;
-  ownerName: string;
-  phoneNumber: string;
-  email: string;
+  id?: string;
+  stationId: number;
+  city: string;
+  location?: string;
+  licenseNumber: string;
+  ownerName?: string;
+  ownerFullName: string;
+  phoneNumber?: string;
+  ownerPhoneNumber: string;
+  email?: string;
+  fuelType: string;
+  remainingFuelQuantity: number;
 };
 
 // Sample data defined outside the component
 const mockStationData = [
   {
-    id: "ST001",
-    location: "Colombo, Main Street",
-    ownerName: "John Smith",
-    phoneNumber: "+94 77 123 4567",
+    stationId: 1,
+    city: "Colombo",
+    licenseNumber: "CM12345",
+    ownerFullName: "John Smith",
+    ownerPhoneNumber: "+94 77 123 4567",
     email: "john.smith@fuelstation.com",
+    fuelType: "Petrol",
+    remainingFuelQuantity: 8500,
   },
   {
-    id: "ST002",
-    location: "Kandy, Temple Road",
-    ownerName: "Sarah Johnson",
-    phoneNumber: "+94 71 234 5678",
+    stationId: 2,
+    city: "Kandy",
+    licenseNumber: "KA67890",
+    ownerFullName: "Sarah Johnson",
+    ownerPhoneNumber: "+94 71 234 5678",
     email: "sarah.j@fuelstation.com",
+    fuelType: "Diesel",
+    remainingFuelQuantity: 4200,
   },
   {
-    id: "ST003",
-    location: "Galle, Marine Drive",
-    ownerName: "Michael Fernando",
-    phoneNumber: "+94 76 345 6789",
+    stationId: 3,
+    city: "Chicago",
+    licenseNumber: "CH11223",
+    ownerFullName: "Alice Johnson",
+    ownerPhoneNumber: "555-123-4567",
+    fuelType: "Petrol",
+    remainingFuelQuantity: 7000,
+  },
+  {
+    stationId: 4,
+    city: "Galle",
+    licenseNumber: "GA54321",
+    ownerFullName: "Michael Fernando",
+    ownerPhoneNumber: "+94 76 345 6789",
     email: "michael.f@fuelstation.com",
+    fuelType: "Petrol",
+    remainingFuelQuantity: 3500,
   },
   {
-    id: "ST004",
-    location: "Jaffna, Hospital Road",
-    ownerName: "Priya Kamal",
-    phoneNumber: "+94 75 456 7890",
+    stationId: 5,
+    city: "Jaffna",
+    licenseNumber: "JA98765",
+    ownerFullName: "Priya Kamal",
+    ownerPhoneNumber: "+94 75 456 7890",
     email: "priya.k@fuelstation.com",
-  },
-  {
-    id: "ST005",
-    location: "Negombo, Beach Road",
-    ownerName: "David Perera",
-    phoneNumber: "+94 78 567 8901",
-    email: "david.p@fuelstation.com",
+    fuelType: "Diesel",
+    remainingFuelQuantity: 9200,
   },
 ];
 
@@ -59,7 +80,7 @@ const StationTable = () => {
   const [stations, setStations] = useState<Station[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [useRealData, setUseRealData] = useState(false); // Set to false for now to use mock data
+  const [useRealData, setUseRealData] = useState(false);
 
   useEffect(() => {
     const fetchStations = async () => {
@@ -72,9 +93,7 @@ const StationTable = () => {
             setTimeout(() => reject(new Error("Request timed out")), 3000)
           );
 
-          // Try to fetch from the real API with timeout
           try {
-            // Replace with your actual API endpoint - could be baseURL + path
             const response = await Promise.race([
               axios.get(
                 "http://localhost:8080/fuel-station/all-remaining-fuel"
@@ -82,18 +101,12 @@ const StationTable = () => {
               timeoutPromise,
             ]);
 
-            const data = response.data.map((station: any) => ({
-              id: station.stationId,
-              location: station.city,
-              ownerName: station.ownerName,
-              phoneNumber: station.phoneNumber,
-              email: station.email || "N/A",
-            }));
+            const data = response.data;
 
             if (data && data.length > 0) {
               setStations(data);
               setError(null);
-              return; // Exit early if we have real data
+              return;
             } else {
               throw new Error("No data received from API");
             }
@@ -111,7 +124,6 @@ const StationTable = () => {
         console.error("Error in fetching station data:", err);
         setError("Failed to load station data");
 
-        // Still try to show mock data even if something went wrong above
         try {
           setStations(mockStationData);
         } catch (mockErr) {
@@ -125,43 +137,82 @@ const StationTable = () => {
     fetchStations();
   }, [useRealData]);
 
-  // Define columns using MRT_ColumnDef
+  // Define columns
   const columns = useMemo<MRT_ColumnDef<Station>[]>(
     () => [
       {
-        accessorKey: "id",
+        accessorKey: "stationId",
         header: "Station ID",
+        size: 90,
+        enableSorting: true,
+        enableFiltering: true,
+      },
+      {
+        accessorKey: "city",
+        header: "Location",
         size: 120,
         enableSorting: true,
         enableFiltering: true,
       },
       {
-        accessorKey: "location",
-        header: "Location",
-        size: 200,
+        accessorKey: "licenseNumber",
+        header: "License No.",
+        size: 120,
         enableSorting: true,
         enableFiltering: true,
       },
       {
-        accessorKey: "ownerName",
+        accessorKey: "ownerFullName",
         header: "Owner Name",
         size: 150,
         enableSorting: true,
         enableFiltering: true,
       },
       {
-        accessorKey: "phoneNumber",
+        accessorKey: "ownerPhoneNumber",
         header: "Phone Number",
-        size: 150,
+        size: 140,
         enableSorting: true,
         enableFiltering: true,
       },
       {
-        accessorKey: "email",
-        header: "Email",
-        size: 200,
+        accessorKey: "fuelType",
+        header: "Fuel Type",
+        size: 100,
         enableSorting: true,
         enableFiltering: true,
+      },
+      {
+        accessorKey: "remainingFuelQuantity",
+        header: "Remaining Fuel (L)",
+        size: 140,
+        enableSorting: true,
+        enableFiltering: false,
+        Cell: ({ cell }) => {
+          const value = cell.getValue<number>();
+          return (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography>{value.toLocaleString()}</Typography>
+            </Box>
+          );
+        },
+      },
+      {
+        id: "status",
+        header: "Status",
+        size: 100,
+        enableSorting: true,
+        enableFiltering: false,
+        Cell: ({ row }) => {
+          const remainingFuel = row.original.remainingFuelQuantity;
+          const LOW_FUEL_THRESHOLD = 5000;
+
+          // Check if fuel is below threshold
+          if (remainingFuel < LOW_FUEL_THRESHOLD) {
+            return <Tag color="error">Low Quota</Tag>;
+          }
+          return <Tag color="success">Sufficient</Tag>;
+        },
       },
     ],
     []
@@ -181,6 +232,12 @@ const StationTable = () => {
     enableColumnResizing: true,
     enableDensityToggle: true,
     enableFullScreenToggle: true,
+    layoutMode: "grid",
+    displayColumnDefOptions: {
+      "mrt-row-expand": {
+        size: 50,
+      },
+    },
     muiSearchTextFieldProps: {
       variant: "outlined",
       placeholder: "Search stations...",
@@ -212,6 +269,7 @@ const StationTable = () => {
     muiTableContainerProps: {
       sx: {
         width: "100%",
+        overflowX: "auto",
       },
     },
     muiTableProps: {
@@ -222,6 +280,13 @@ const StationTable = () => {
     },
     muiTableBodyRowProps: {
       hover: true,
+    },
+    muiTableHeadRowProps: {
+      sx: {
+        "& th": {
+          backgroundColor: "#fafafa",
+        },
+      },
     },
     renderEmptyRowsFallback: () => (
       <Box
@@ -241,7 +306,13 @@ const StationTable = () => {
   });
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box
+      sx={{
+        width: "100%",
+        "& .MuiPaper-root": { width: "100%" },
+        "& .MuiTable-root": { width: "100%" },
+      }}
+    >
       {error && !stations.length && (
         <Box sx={{ mb: 2 }}>
           <Typography color="error">{error}</Typography>
