@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.fqms.fuelquotamanagementsystem.shared.ApplicationConstants;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 public class VehicleServiceImpl implements VehicleService {
@@ -51,6 +52,13 @@ public class VehicleServiceImpl implements VehicleService {
         account.setUsername(request.getUsername());
         account.setPassword(passwordEncoder.encode(request.getPassword()));
         account.setRole( ApplicationConstants.ROLES.ROLE_VEHICLE.name());
+
+        Optional<Account> accountExists = accountRepository.findByUsernameIgnoreCase(request.getUsername());
+
+        if (accountExists.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
         Account savedAccount = accountRepository.save(account);
 
         Vehicle vehicle = new Vehicle();

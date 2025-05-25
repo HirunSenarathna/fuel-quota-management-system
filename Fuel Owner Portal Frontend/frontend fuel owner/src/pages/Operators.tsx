@@ -10,41 +10,46 @@ type Person = {
   fullName: string;
   nic: string;
   contactNo: string;
-  email?: string;
 };
 
 const Operators: React.FC = () => {
   const navigate = useNavigate();
 
+  // const columns = useMemo<MRT_ColumnDef<Person>[]>(
+  //   () => [
+  //     {
+  //       accessorKey: "fullname",
+  //       header: "Full Name",
+  //       size: 250,
+  //     },
+  //     {
+  //       accessorKey: "nic",
+  //       header: "NIC",
+  //       size: 150,
+  //     },
+  //     {
+  //       accessorKey: "PhoneNo",
+  //       header: "Phone Number",
+  //       size: 200,
+  //     },
+  //     {
+  //       accessorKey: "email",
+  //       header: "Email",
+  //       size: 150,
+  //     },
+  //   ],
+  //   []
+  // );
+
   const [data, setData] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const columns = useMemo<MRT_ColumnDef<Person>[]>(
-    () => [
-      {
-        accessorKey: "fullname",
-        header: "Full Name",
-        size: 250,
-      },
-      {
-        accessorKey: "nic",
-        header: "NIC",
-        size: 150,
-      },
-      {
-        accessorKey: "PhoneNo",
-        header: "Phone Number",
-        size: 200,
-      },
-      {
-        accessorKey: "email",
-        header: "Email",
-        size: 150,
-      },
-    ],
-    []
-  );
+  const columns = useMemo<MRT_ColumnDef<Person>[]>(() => [
+    { accessorKey: "fullName", header: "Full Name", size: 250 },
+    { accessorKey: "nic", header: "NIC", size: 150 },
+    { accessorKey: "contactNo", header: "Phone Number", size: 200 },
+  ], []);
 
   useEffect(() => {
     const fetchOperators = async () => {
@@ -56,14 +61,11 @@ const Operators: React.FC = () => {
         if (!token) throw new Error("Authentication token not found");
 
         // Step 1: Get current user
-        const currentUserResponse = await fetch(
-          "http://localhost:8080/account/currentuser",
-          {
+        const currentUserResponse = await fetch("http://localhost:8080/account/currentuser", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
-        );
+        });
 
         if (!currentUserResponse.ok) {
           throw new Error("Failed to fetch current user");
@@ -72,7 +74,6 @@ const Operators: React.FC = () => {
         const currentUserData = await currentUserResponse.json();
         console.log("Current user data:", currentUserData);
 
-        // Get stationId from StationOwnerResponseDto
         const stationId = currentUserData.stationId;
 
         if (!stationId) {
@@ -100,7 +101,6 @@ const Operators: React.FC = () => {
           fullName: op.fullName,
           nic: op.nic,
           contactNo: op.contactNo,
-          email: op.email || "",
         }));
 
         setData(operatorsData);
@@ -125,23 +125,8 @@ const Operators: React.FC = () => {
   if (error) return <div style={{ color: "red" }}>Error: {error}</div>;
 
   return (
-    <div>
-      {/* Scrollable table container */}
-      <div
-        style={{
-          width: "100%",
-          padding: 24,
-          background: "#fff",
-          borderRadius: 8,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-          overflowX: "auto",
-          overflowY: "auto",
-          maxHeight: "500px",
-        }}
-      >
-        <MaterialReactTable table={table} />
-      </div>
-
+    <>
+      
       {/* Fixed Button */}
       <button
         onClick={() => navigate("/owner/station-operator-registration")}
@@ -163,7 +148,24 @@ const Operators: React.FC = () => {
       >
         Add Operator
       </button>
+      <div
+      style={{
+        width: "100%",
+        padding: 24,
+        background: "#fff",
+        borderRadius: 8,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+        overflowX: "auto",
+        overflowY: "auto",
+        maxHeight: "500px"
+      }}
+    >
+      <MaterialReactTable table={table} />
     </div>
+
+    </>
+
+    
   );
 };
 

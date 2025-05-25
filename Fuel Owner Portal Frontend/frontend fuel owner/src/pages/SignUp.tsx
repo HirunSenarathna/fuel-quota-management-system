@@ -5,6 +5,21 @@ import bgImage from "../assets/bgimg.jpg"; // Make sure this path is correct
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
 
+  // Log when component mounts
+  React.useEffect(() => {
+    console.log("SignUp component mounted");
+  }, []);
+
+  const handleVehicleOwnerClick = () => {
+    console.log("Navigating to vehicle registration page");
+    navigate("/vehicle-registration");
+  };
+
+  const handleStationOwnerClick = () => {
+    console.log("Navigating to station owner registration page");
+    navigate("/station-owner-registration");
+  };
+
   const containerStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
@@ -53,13 +68,13 @@ const SignUp: React.FC = () => {
   };
 
   const questionStyle: React.CSSProperties = {
-            fontSize: "20px",
-            textAlign: "left",
-            fontWeight: 500,
-            color: "#000000", // A nice blue for visual interest
-            marginBottom: "1px",
-            letterSpacing: "0.5px",
-            fontStyle: "italic",
+    fontSize: "20px",
+    textAlign: "left",
+    fontWeight: 500,
+    color: "#000000", // A nice blue for visual interest
+    marginBottom: "1px",
+    letterSpacing: "0.5px",
+    fontStyle: "italic",
   };
 
   return (
@@ -69,14 +84,14 @@ const SignUp: React.FC = () => {
         <p style={questionStyle}>Are you a vehicle owner?</p>
         <button
           style={buttonStyle}
-          onClick={() => navigate("/vehicle-registration")}
+          onClick={handleVehicleOwnerClick}
         >
           Register as a Vehicle Owner
         </button>
         <p style={questionStyle}>Are you a fuel station owner?</p>
         <button
           style={buttonStyle}
-          onClick={() => navigate("/station-owner-registration")}
+          onClick={handleStationOwnerClick}
         >
           Register as a Station Owner
         </button>
