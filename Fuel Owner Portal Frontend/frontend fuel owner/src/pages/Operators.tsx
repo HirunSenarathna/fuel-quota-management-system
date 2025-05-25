@@ -62,9 +62,9 @@ const Operators: React.FC = () => {
 
         // Step 1: Get current user
         const currentUserResponse = await fetch("http://localhost:8080/account/currentuser", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
         });
 
         if (!currentUserResponse.ok) {
@@ -130,22 +130,22 @@ const Operators: React.FC = () => {
       {/* Fixed Button */}
       <button
         onClick={() => navigate("/owner/station-operator-registration")}
-          style={{
-            position: "fixed",
-            bottom: 48,
-            right: 48,
-            width: "250px",
-            padding: "6px 12px",
-            fontSize: "1.2rem", // equivalent to Tailwind's text-sm
-            backgroundColor: "#007bff",
-            color: "#fff",
-            border: "none",
-            borderRadius: 4,
-            cursor: "pointer",
-            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.15)",
-            zIndex: 1000,
-          }}
-        >
+        style={{
+          position: "fixed",
+          bottom: 48,
+          right: 48,
+          width: "250px",
+          padding: "6px 12px",
+          fontSize: "1.2rem", // equivalent to Tailwind's text-sm
+          backgroundColor: "#007bff",
+          color: "#fff",
+          border: "none",
+          borderRadius: 4,
+          cursor: "pointer",
+          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.15)",
+          zIndex: 1000,
+        }}
+      >
         Add Operator
       </button>
       <div

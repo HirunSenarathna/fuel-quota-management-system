@@ -3,8 +3,6 @@ import { Layout, Menu } from "antd";
 import {
   DashboardOutlined,
   UserOutlined,
-  CarOutlined,
-  FileTextOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -32,18 +30,6 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse }) => {
       icon: <UserOutlined />,
       label: "Operators",
       onClick: () => navigate("/owner/operators"),
-    },
-    {
-      key: "vehicles",
-      icon: <CarOutlined />,
-      label: "Vehicles",
-      onClick: () => navigate("/owner/vehicles"),
-    },
-    {
-      key: "reports",
-      icon: <FileTextOutlined />,
-      label: "Reports",
-      onClick: () => navigate("/owner/reports"),
     },
   ];
 
