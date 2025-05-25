@@ -119,7 +119,7 @@ public class FuelStationServiceImpl implements FuelStationService {
                     receivedFuelQuantityDto.getFuelQuantity());
 
             StationFuelQuantity stationFuelQuantity = stationFuelQuantityRepository
-                    .findByStationIdAndFuelType(receivedFuelQuantityDto.getStationId(), receivedFuelQuantityDto.getFuelType());
+                    .findByStationIdAndFuelTypeIgnoreCase(receivedFuelQuantityDto.getStationId(), receivedFuelQuantityDto.getFuelType());
 
             if (stationFuelQuantity != null) {
                 stationFuelQuantity.setFuelQuantity(receivedFuelQuantityDto.getFuelQuantity());
@@ -143,7 +143,7 @@ public class FuelStationServiceImpl implements FuelStationService {
     @Override
     public int getRemainingFuelQuantity(StationFuelQuantityDto stationFuelQuantityDto) {
         StationFuelQuantity stationFuelQuantity = stationFuelQuantityRepository
-                .findByStationIdAndFuelType(
+                .findByStationIdAndFuelTypeIgnoreCase(
                         stationFuelQuantityDto.getStationId(),
                         stationFuelQuantityDto.getFuelType());
 

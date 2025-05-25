@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StationFuelQuantityRepository extends JpaRepository<StationFuelQuantity, Integer> {
-    StationFuelQuantity findByStationIdAndFuelType(int stationId, String fuelType);
+    StationFuelQuantity findByStationIdAndFuelTypeIgnoreCase(int stationId, String fuelType);
 }
