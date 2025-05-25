@@ -31,8 +31,8 @@ const Router: React.FC = () => {
         element={<StationOwnerRegistration />}
       />
       <Route
-        path="/station-operator-registration"
-        element={<StationOperatorRegistration />}
+        path="/vehicle-registration"
+        element={<VehicleRegistration />}
       />
       <Route path="/vehicle-registration" element={<VehicleRegistration />} />
 

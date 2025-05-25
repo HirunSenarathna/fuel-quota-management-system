@@ -1,9 +1,6 @@
 package com.fqms.fuelquotamanagementsystem.service.Impl;
 
-import com.fqms.fuelquotamanagementsystem.Dtos.FuelStationRegistrationRequestDto;
-import com.fqms.fuelquotamanagementsystem.Dtos.ReceivedFuelQuantityDto;
-import com.fqms.fuelquotamanagementsystem.Dtos.RemainingFuelQuantityForStations;
-import com.fqms.fuelquotamanagementsystem.Dtos.StationFuelQuantityDto;
+import com.fqms.fuelquotamanagementsystem.Dtos.*;
 import com.fqms.fuelquotamanagementsystem.models.system.Account;
 import com.fqms.fuelquotamanagementsystem.models.system.FuelStation;
 import com.fqms.fuelquotamanagementsystem.models.system.FuelStationOwner;
@@ -122,7 +119,7 @@ public class FuelStationServiceImpl implements FuelStationService {
                     receivedFuelQuantityDto.getFuelQuantity());
 
             StationFuelQuantity stationFuelQuantity = stationFuelQuantityRepository
-                    .findByStationIdAndFuelType(receivedFuelQuantityDto.getStationId(), receivedFuelQuantityDto.getFuelType());
+                    .findByStationIdAndFuelTypeIgnoreCase(receivedFuelQuantityDto.getStationId(), receivedFuelQuantityDto.getFuelType());
 
             if (stationFuelQuantity != null) {
                 stationFuelQuantity.setFuelQuantity(receivedFuelQuantityDto.getFuelQuantity());
@@ -146,7 +143,7 @@ public class FuelStationServiceImpl implements FuelStationService {
     @Override
     public int getRemainingFuelQuantity(StationFuelQuantityDto stationFuelQuantityDto) {
         StationFuelQuantity stationFuelQuantity = stationFuelQuantityRepository
-                .findByStationIdAndFuelType(
+                .findByStationIdAndFuelTypeIgnoreCase(
                         stationFuelQuantityDto.getStationId(),
                         stationFuelQuantityDto.getFuelType());
 
