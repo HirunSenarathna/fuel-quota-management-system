@@ -9,7 +9,6 @@ type Person = {
   fullName: string;
   nic: string;
   contactNo: string;
-  email?: string;
 };
 
 const Operators: React.FC = () => {
@@ -21,7 +20,6 @@ const Operators: React.FC = () => {
     { accessorKey: "fullName", header: "Full Name", size: 250 },
     { accessorKey: "nic", header: "NIC", size: 150 },
     { accessorKey: "contactNo", header: "Phone Number", size: 200 },
-    { accessorKey: "email", header: "Email", size: 150 },
   ], []);
 
   useEffect(() => {
@@ -47,7 +45,6 @@ const Operators: React.FC = () => {
         const currentUserData = await currentUserResponse.json();
         console.log("Current user data:", currentUserData);
 
-        // ✅ Step 2: Get stationId from StationOwnerResponseDto
         const stationId = currentUserData.stationId;
 
         if (!stationId) {
@@ -75,7 +72,6 @@ const Operators: React.FC = () => {
           fullName: op.fullName,
           nic: op.nic,
           contactNo: op.contactNo,
-          email: op.email || "",
         }));
 
         setData(operatorsData);

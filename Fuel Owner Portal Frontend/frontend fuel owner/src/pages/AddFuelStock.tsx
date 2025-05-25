@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import bgImage from "../assets/bgimg.jpg";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 type StockFormData = {
   fuelType: string;
@@ -14,31 +16,28 @@ const AddStockForm: React.FC = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
     reset,
   } = useForm<StockFormData>();
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const token = localStorage.getItem("token"); // Change this to match FuelOwnerDashboard
+      const token = localStorage.getItem("token");
 
       if (!token) return;
 
       try {
-        const response = await fetch(
-          "http://localhost:8080/account/currentuser",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch("http://localhost:8080/account/currentuser", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) throw new Error("Failed to fetch user");
 
         const user = await response.json();
 
-        // Assume stationId is part of the user object
         if (user?.stationId) {
           setStationId(user.stationId);
         } else {
@@ -75,20 +74,15 @@ const AddStockForm: React.FC = () => {
 
       console.log("Submitting fuel stock with payload:", payload);
 
-      // Updated URL with trailing slash
-      const response = await fetch(
-        "http://localhost:8080/fuel-station/receivedFuelQuantity",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch("http://localhost:8080/fuel-station/receivedFuelQuantity", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
-      // Add response logging for debugging
       console.log("Response status:", response.status);
 
       if (!response.ok) {
@@ -105,7 +99,6 @@ const AddStockForm: React.FC = () => {
     }
   };
 
-  // styles (unchanged, same as before)
   const containerStyle: React.CSSProperties = {
     display: "flex",
     justifyContent: "center",
@@ -143,6 +136,7 @@ const AddStockForm: React.FC = () => {
     backgroundColor: "#ffffff",
     color: "#000000",
     boxSizing: "border-box",
+    fontSize: "1rem",
   };
 
   const errorStyle: React.CSSProperties = {
@@ -211,10 +205,21 @@ const AddStockForm: React.FC = () => {
 
         <div style={{ marginBottom: "16px" }}>
           <label style={labelStyle}>Arrival Date</label>
-          <input
-            type="date"
-            {...register("arrivalDate", { required: "Date is required" })}
-            style={inputStyle}
+          <Controller
+            control={control}
+            name="arrivalDate"
+            rules={{ required: "Date is required" }}
+            render={({ field }) => (
+              <DatePicker
+                placeholderText="Select a date"
+                selected={field.value}
+                onChange={(date) => field.onChange(date)}
+                dateFormat="yyyy-MM-dd"
+                className="react-datepicker__input-text"
+                wrapperClassName="datepicker-wrapper"
+                style={inputStyle}
+              />
+            )}
           />
           {errors.arrivalDate && (
             <p style={errorStyle}>{errors.arrivalDate.message}</p>

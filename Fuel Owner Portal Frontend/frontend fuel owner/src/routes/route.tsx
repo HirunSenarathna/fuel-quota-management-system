@@ -33,6 +33,9 @@ const Router: React.FC = () => {
         path="/station-operator-registration"
         element={<StationOperatorRegistration />}
       />
+      <Route path="/vehicle-registration" element={<VehicleRegistration />} />
+
+      {/* Fuel Owner routes */}
 
       {/* Admin routes */}
       <Route
