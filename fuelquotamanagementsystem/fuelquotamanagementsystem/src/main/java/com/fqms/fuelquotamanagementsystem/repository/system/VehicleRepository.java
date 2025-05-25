@@ -12,4 +12,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Integer> {
     Optional<Vehicle> findByVehicleNumber(String vehicleNumber);
     Optional<Vehicle> findByVehicleNumberAndChassisNumber(String vehicleNumber, String chassisNumber);
     Optional<Vehicle> findByAccountId(int accountId);
+
+
+    boolean existsVehicleByAccount_UsernameAndChassisNumberAndVehicleNumber(String username, String chassisNumber, String vehicleNumber);
 }

@@ -73,7 +73,9 @@ export const navigateBasedOnRole = (token: string | null): void => {
     // Navigate based on role
     // console.log('User role:', decoded.role); 
     if (decoded.role === 'ROLE_ADMIN') {
-      window.location.href = '/admin/dashboard'; 
+    window.location.href = '/admin/dashboard';
+    } else if (decoded.role === 'ROLE_VEHICLE') {
+    window.location.href = '/vehicle-owner/dashboard'; 
     } else if (decoded.role === 'ROLE_FUEL_STATION_OWNER') {
       window.location.href = '/owner/dashboard';
     } else {
