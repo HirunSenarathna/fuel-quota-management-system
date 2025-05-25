@@ -17,6 +17,7 @@ const VehicleRegistration = () => {
   // State variables for form fields
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
   const [vehicleNumber, setVehicleNumber] = useState('');
   const [chassisNumber, setChassisNumber] = useState('');
   const [vehicleType, setVehicleType] = useState('');
@@ -29,6 +30,7 @@ const VehicleRegistration = () => {
   const clearForm = () => {
     setUsername('');
     setPassword('');
+    setPhone('');
     setVehicleNumber('');
     setChassisNumber('');
     setVehicleType('');
@@ -48,41 +50,42 @@ const VehicleRegistration = () => {
 
     try {
       const response = await fetch('http://localhost:8080/vehicle/register', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'image/png', // QR code 
-  },
-  body: JSON.stringify({
-    username,
-    password,
-    vehicleNumber,
-    chassisNumber,
-    vehicleType,
-    fuelType,
-  }),
-});
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'image/png', // QR code 
+        },
+        body: JSON.stringify({
+          username,
+          password,
+          phone,
+          vehicleNumber,
+          chassisNumber,
+          vehicleType,
+          fuelType,
+        }),
+      });
 
-if (!response.ok) {
-  const errorText = await response.text();
-  throw new Error(errorText || 'Failed to register vehicle');
-}
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Failed to register vehicle');
+      }
 
-const blob = await response.blob();
+      const blob = await response.blob();
 
-// Extract filename from response headers if available
-const contentDisposition = response.headers.get('Content-Disposition');
-const filenameMatch = contentDisposition?.match(/filename="?([^"]+)"?/);
-const filename = filenameMatch ? filenameMatch[1] : 'vehicle-qr.png';
+      // Extract filename from response headers if available
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filenameMatch = contentDisposition?.match(/filename="?([^"]+)"?/);
+      const filename = filenameMatch ? filenameMatch[1] : 'vehicle-qr.png';
 
-const url = window.URL.createObjectURL(blob);
-const link = document.createElement('a');
-link.href = url;
-link.download = filename;
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-window.URL.revokeObjectURL(url);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
 
 
       setMessage({ type: 'success', text: 'Vehicle registered successfully! File downloaded.' });
@@ -130,6 +133,16 @@ window.URL.revokeObjectURL(url);
               onChange={(e) => setPassword(e.target.value)}
               margin="normal"
             />
+            <TextField
+              fullWidth
+              required
+              label="Phone Number"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              margin="normal"
+            />
+
             <TextField
               fullWidth
               required
