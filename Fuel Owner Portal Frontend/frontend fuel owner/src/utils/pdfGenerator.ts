@@ -5,8 +5,10 @@ import autoTable from 'jspdf-autotable';
 export interface StationReportItem {
   stationId: number;
   city: string;
+  licenseNumber: string;
+  ownerName: string;
+  fuelType: string;
   remainingQuota: number;
-  totalQuota: number;
 }
 
 class PDFGenerator {
@@ -32,20 +34,24 @@ class PDFGenerator {
       const tableColumn = [
         "Station ID",
         "City",
+        "License No.",
+        "Owner Name",
+        "Fuel Type",
         "Remaining Quota (L)",
-        "Total Quota (L)",
         "Status"
       ];
       
       const tableRows = data.map((item) => {
-        const percentRemaining = (item.remainingQuota / item.totalQuota) * 100;
-        const status = percentRemaining < 50 ? "Low Quota" : "Sufficient";
+        // Define status based on a threshold
+        const status = item.remainingQuota < 5000 ? "Low Quota" : "Sufficient";
         
         return [
           item.stationId,
           item.city,
+          item.licenseNumber,
+          item.ownerName,
+          item.fuelType || "Not specified",
           item.remainingQuota.toLocaleString(),
-          item.totalQuota.toLocaleString(),
           status
         ];
       });
@@ -62,7 +68,9 @@ class PDFGenerator {
           1: { cellWidth: 'auto' },
           2: { cellWidth: 'auto' },
           3: { cellWidth: 'auto' },
-          4: { cellWidth: 'auto' }
+          4: { cellWidth: 'auto' },
+          5: { cellWidth: 'auto' },
+          6: { cellWidth: 'auto' }
         },
         rowPageBreak: "auto",
         theme: "grid",
@@ -79,21 +87,12 @@ class PDFGenerator {
         0
       );
       
-      const totalQuota = data.reduce(
-        (sum, item) => sum + item.totalQuota, 
-        0
-      );
-      
-      const lowFuelStations = data.filter(station => {
-        const percentRemaining = (station.remainingQuota / station.totalQuota) * 100;
-        return percentRemaining < 50;
-      }).length;
+      const lowFuelStations = data.filter(station => station.remainingQuota < 5000).length;
 
       doc.setFontSize(10);
       doc.text(`Total Stations: ${data.length}`, 14, finalY + 25);
       doc.text(`Total Remaining Quota: ${totalRemainingQuota.toLocaleString()} L`, 14, finalY + 32);
-      doc.text(`Total Quota: ${totalQuota.toLocaleString()} L`, 14, finalY + 39);
-      doc.text(`Stations with Low Quota: ${lowFuelStations}`, 14, finalY + 46);
+      doc.text(`Stations with Low Quota: ${lowFuelStations}`, 14, finalY + 39);
 
       // Add footer
       const pageCount = (doc as any).internal.getNumberOfPages();

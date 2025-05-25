@@ -6,34 +6,6 @@ import PDFGenerator, { StationReportItem } from "../../utils/pdfGenerator";
 
 const { Title } = Typography;
 
-// Mock data
-const mockStationData: StationReportItem[] = [
-  {
-    stationId: 1,
-    city: "Colombo",
-    remainingQuota: 6000,
-    totalQuota: 10000,
-  },
-  {
-    stationId: 2,
-    city: "Kandy",
-    remainingQuota: 4500,
-    totalQuota: 8000,
-  },
-  {
-    stationId: 3,
-    city: "Galle",
-    remainingQuota: 3200,
-    totalQuota: 7500,
-  },
-  {
-    stationId: 4,
-    city: "Jaffna",
-    remainingQuota: 2800,
-    totalQuota: 9000,
-  },
-];
-
 const StationReportTab: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [stationData, setStationData] = useState<StationReportItem[]>([]);
@@ -47,12 +19,21 @@ const StationReportTab: React.FC = () => {
     try {
       setLoading(true);
 
+      // Get data from the station service
+      const stations = await stationService.getAllStations();
 
-      // Using mock
-      setTimeout(() => {
-        setStationData(mockStationData);
-        setLoading(false);
-      }, 500);
+      // Transform the data to match our report format
+      const reportData: StationReportItem[] = stations.map((station) => ({
+        stationId: station.stationId,
+        city: station.city,
+        licenseNumber: station.licenseNumber,
+        ownerName: station.ownerFullName,
+        fuelType: station.fuelType,
+        remainingQuota: station.remainingFuelQuantity,
+      }));
+
+      setStationData(reportData);
+      setLoading(false);
     } catch (error) {
       console.error("Failed to fetch station data:", error);
       message.error("Failed to fetch station data");
@@ -87,28 +68,40 @@ const StationReportTab: React.FC = () => {
       key: "city",
     },
     {
+      title: "License No.",
+      dataIndex: "licenseNumber",
+      key: "licenseNumber",
+    },
+    {
+      title: "Owner Name",
+      dataIndex: "ownerName",
+      key: "ownerName",
+    },
+    {
+      title: "Fuel Type",
+      dataIndex: "fuelType",
+      key: "fuelType",
+      render: (text: string) =>
+        text || <span style={{ color: "#999" }}>Not specified</span>,
+    },
+    {
       title: "Remaining Quota (L)",
       dataIndex: "remainingQuota",
       key: "remainingQuota",
       render: (value: number) => value.toLocaleString(),
     },
-    {
-      title: "Total Quota (L)",
-      dataIndex: "totalQuota",
-      key: "totalQuota",
-      render: (value: number) => value.toLocaleString(),
-    },
+    // Total Quota column removed
     {
       title: "Status",
       key: "status",
       render: (_, record: StationReportItem) => {
-        const percentRemaining =
-          (record.remainingQuota / record.totalQuota) * 100;
-        const status = percentRemaining < 50 ? "Low Quota" : "Sufficient";
+        // Status now determined by threshold
+        const status =
+          record.remainingQuota < 5000 ? "Low Quota" : "Sufficient";
         return (
           <span
             style={{
-              color: percentRemaining < 50 ? "#ff4d4f" : "#52c41a",
+              color: record.remainingQuota < 5000 ? "#ff4d4f" : "#52c41a",
               fontWeight: "bold",
             }}
           >
