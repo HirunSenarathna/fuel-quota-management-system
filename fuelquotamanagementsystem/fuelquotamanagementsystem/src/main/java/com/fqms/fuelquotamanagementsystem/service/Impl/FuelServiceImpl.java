@@ -63,7 +63,7 @@ public class FuelServiceImpl implements FuelService {
 
             // Check station fuel availability
             StationFuelQuantity stationFuel = stationFuelQuantityRepository
-                    .findByStationIdAndFuelType(request.getStationId(), request.getFuelType());
+                    .findByStationIdAndFuelTypeIgnoreCase(request.getStationId(), request.getFuelType());
 
             if (stationFuel == null) {
                 return ResponseEntity
