@@ -12,6 +12,7 @@ import StationOwnerRegistration from "../pages/StationOwnerRegistration";
 import VehicleRegistration from "../pages/VehicleRegistration";
 import StationOperatorRegistration from "../pages/StationOperatorRegistration";
 import AddStockForm from "../pages/AddFuelStock";
+import VehicleOwnerDashboard from "../pages/VehicleOwnerDashboard";
 
 // Layouts
 import AdminLayout from "../layouts/AdminLayout";
@@ -66,6 +67,20 @@ const Router: React.FC = () => {
         <Route path="/owner/operators" element={<Operators />} />
         <Route path="/owner/vehicles" element={<VehicleRegistration />} />
         <Route path="/owner/add-fuel-stock" element={<AddStockForm />} />
+        <Route
+          path="/owner/station-operator-registration"
+          element={<StationOperatorRegistration />} />
+        
+      </Route>
+
+      {/* Vehicle Owner routes */}
+      <Route
+        path="/vehicle-owner"
+      
+      >
+        <Route index element={<Navigate to="/vehicle-owner/dashboard" replace />} />
+        <Route path="/vehicle-owner/dashboard" element={<VehicleOwnerDashboard />} />
+
       </Route>
 
       {/* Redirects */}
