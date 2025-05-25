@@ -8,6 +8,7 @@ import com.fqms.fuelquotamanagementsystem.repository.system.AccountRepository;
 import com.fqms.fuelquotamanagementsystem.repository.system.VehicleRepository;
 import com.fqms.fuelquotamanagementsystem.service.VehicleService;
 import com.google.zxing.WriterException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,12 @@ public class VehicleServiceImpl implements VehicleService {
         return registeredVehicleRepository.findByVehicleNumberAndChassisNumber(vehicleNumber, chassisNumber).isPresent();
     }
 
+    private boolean isVehicleExists(String username, String chassisNumber, String vehicleNumber) {
+        return vehicleRepository.existsVehicleByAccount_UsernameAndChassisNumberAndVehicleNumber(username, chassisNumber, vehicleNumber);
+    }
+
     @Override
+    @Transactional
     public ResponseEntity<byte[]> registerVehicle(VehicleRegistrationRequestDto request) {
 
         Account account = new Account();
@@ -54,6 +60,7 @@ public class VehicleServiceImpl implements VehicleService {
         vehicle.setFuelType(request.getFuelType());
         vehicle.setPhone(request.getPhone());
         vehicle.setRemainingQuotaLimit(20.00);
+        vehicle.setAccount(savedAccount);
 
         // Step 1: Check if it's a registered vehicle from the mock database
         if (!isRegisteredVehicle(vehicle.getVehicleNumber(), vehicle.getChassisNumber())) {
@@ -63,31 +70,37 @@ public class VehicleServiceImpl implements VehicleService {
                     .body(null); // or you could return a custom error message as byte[] if preferred
         }
 
-        // Step 2: Save the vehicle in the system database
-        Vehicle savedVehicle = vehicleRepository.save(vehicle);
+        if (!isVehicleExists(vehicle.getAccount().getUsername(), vehicle.getChassisNumber(), vehicle.getVehicleNumber())) {
+            // Step 2: Save the vehicle in the system database
+            Vehicle savedVehicle = vehicleRepository.save(vehicle);
 
-        try {
-            // Step 3: Prepare data for QR
-            String data = String.format(
-                    "Vehicle Number: %s\nChassis Number: %s\nVehicle Type: %s\nFuel Type: %s\nRemaining Quota Limit: %.2f",
-                    savedVehicle.getVehicleNumber(),
-                    savedVehicle.getChassisNumber(),
-                    savedVehicle.getVehicleType(),
-                    savedVehicle.getFuelType(),
-                    savedVehicle.getRemainingQuotaLimit()
-            );
+            try {
+                // Step 3: Prepare data for QR
+                String data = String.format(
+                        "Vehicle Number: %s\nChassis Number: %s\nVehicle Type: %s\nFuel Type: %s\nRemaining Quota Limit: %.2f",
+                        savedVehicle.getVehicleNumber(),
+                        savedVehicle.getChassisNumber(),
+                        savedVehicle.getVehicleType(),
+                        savedVehicle.getFuelType(),
+                        savedVehicle.getRemainingQuotaLimit()
+                );
 
-            byte[] qrImage = QRCodeGenerator.generateQRCode(data, 300, 300);
+                byte[] qrImage = QRCodeGenerator.generateQRCode(data, 300, 300);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_PNG);
-            headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=vehicle-qr.png");
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.IMAGE_PNG);
+                headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=vehicle-qr.png");
 
-            return ResponseEntity.ok().headers(headers).body(qrImage);
+                return ResponseEntity.ok().headers(headers).body(qrImage);
 
-        } catch (WriterException | IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            } catch (WriterException | IOException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            }
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
         }
     }
 }
