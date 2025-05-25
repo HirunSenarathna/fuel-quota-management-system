@@ -11,6 +11,8 @@ interface StatCardProps {
   isPositive?: boolean;
   loading?: boolean;
   valueStyle?: React.CSSProperties;
+  style?: React.CSSProperties; 
+  className?: string; 
 }
 
 const StatCard: React.FC<StatCardProps> = ({
@@ -22,6 +24,8 @@ const StatCard: React.FC<StatCardProps> = ({
   isPositive,
   loading = false,
   valueStyle,
+  style, 
+  className, 
 }) => {
   // Default styles for positive/negative values
   const defaultValueStyle =
@@ -45,7 +49,7 @@ const StatCard: React.FC<StatCardProps> = ({
     );
 
   return (
-    <Card variant="borderless" size="small">
+    <Card variant="borderless" size="small" style={style} className={className}>
       <Statistic
         title={title}
         value={value}

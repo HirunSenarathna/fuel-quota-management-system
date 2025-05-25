@@ -25,19 +25,7 @@ const Dashboard: React.FC = () => {
             isPositive={true}
             loading={false}
             valueStyle={{ fontSize: "24px", fontWeight: "bold" }}
-          />
-        </Col>
-
-        <Col xs={24} sm={12} md={8} lg={8} xl={8}>
-          <StatCard
-            title="Total Fuel Dispensed"
-            value={500}
-            prefix={<span style={{ color: "#cf1322" }}>-</span>}
-            suffix="liters"
-            precision={0}
-            isPositive={false}
-            loading={false}
-            valueStyle={{ fontSize: "24px", fontWeight: "bold" }}
+            style={{ width: "100%" }}
           />
         </Col>
 
@@ -51,6 +39,7 @@ const Dashboard: React.FC = () => {
             isPositive={true}
             loading={false}
             valueStyle={{ fontSize: "24px", fontWeight: "bold" }}
+            style={{ width: "100%" }}
           />
         </Col>
       </Row>
