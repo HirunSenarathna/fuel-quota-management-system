@@ -29,6 +29,7 @@ const formContainerStyle: React.CSSProperties = {
 const VehicleRegistration = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
   const [vehicleNumber, setVehicleNumber] = useState('');
   const [chassisNumber, setChassisNumber] = useState('');
   const [vehicleType, setVehicleType] = useState('');
@@ -40,6 +41,7 @@ const VehicleRegistration = () => {
   const clearForm = () => {
     setUsername('');
     setPassword('');
+    setPhone('');
     setVehicleNumber('');
     setChassisNumber('');
     setVehicleType('');
@@ -62,11 +64,14 @@ const VehicleRegistration = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'image/png',
+
+          'Accept': 'image/png', // QR code 
+          
         },
         body: JSON.stringify({
           username,
           password,
+          phone,
           vehicleNumber,
           chassisNumber,
           vehicleType,
@@ -80,6 +85,7 @@ const VehicleRegistration = () => {
       }
 
       const blob = await response.blob();
+
       const contentDisposition = response.headers.get('Content-Disposition');
       const filenameMatch = contentDisposition?.match(/filename="?([^"]+)"?/);
       const filename = filenameMatch ? filenameMatch[1] : 'vehicle-qr.png';
@@ -92,6 +98,7 @@ const VehicleRegistration = () => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
+
 
       setMessage({ type: 'success', text: 'Vehicle registered successfully! File downloaded.' });
       clearForm();
@@ -137,6 +144,16 @@ const VehicleRegistration = () => {
               onChange={(e) => setPassword(e.target.value)}
               margin="normal"
             />
+            <TextField
+              fullWidth
+              required
+              label="Phone Number"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              margin="normal"
+            />
+
             <TextField
               fullWidth
               required
