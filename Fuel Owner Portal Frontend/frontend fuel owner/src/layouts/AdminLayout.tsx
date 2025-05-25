@@ -21,6 +21,17 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  // Handle logout function
+  const handleLogout = () => {
+    console.log("Logging out...");
+    localStorage.removeItem("token");
+    console.log(
+      "Token removed from localStorage",
+      localStorage.getItem("token")
+    );
+    navigate("/signin");
+  };
+
   // Define navigation items
   const navigationItems = [
     {
@@ -60,10 +71,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       key: "logout",
       icon: <LogoutOutlined />,
       label: "Logout",
-      onClick: () => {
-        // Handle logout
-        navigate("/login");
-      },
+      onClick: handleLogout, // Use the handleLogout function
     },
   ];
 
