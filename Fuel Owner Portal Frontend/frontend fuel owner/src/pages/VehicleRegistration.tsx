@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import bgImage from '../assets/bgimg.jpg'; // ← adjust the path to your background image
 import '../styles/SignIn.css';
 
 import {
@@ -13,8 +14,19 @@ import {
   MenuItem,
 } from '@mui/material';
 
+const formContainerStyle: React.CSSProperties = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'start',
+  padding: '32px 16px',
+  minHeight: '100vh',
+  overflowY: 'auto',
+  backgroundImage: `url(${bgImage})`,
+  backgroundColor: 'transparent',
+  backgroundSize: 'cover',
+};
+
 const VehicleRegistration = () => {
-  // State variables for form fields
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
@@ -26,7 +38,6 @@ const VehicleRegistration = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
 
-  // Reset form inputs
   const clearForm = () => {
     setUsername('');
     setPassword('');
@@ -53,7 +64,9 @@ const VehicleRegistration = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+
           'Accept': 'image/png', // QR code 
+          
         },
         body: JSON.stringify({
           username,
@@ -73,7 +86,6 @@ const VehicleRegistration = () => {
 
       const blob = await response.blob();
 
-      // Extract filename from response headers if available
       const contentDisposition = response.headers.get('Content-Disposition');
       const filenameMatch = contentDisposition?.match(/filename="?([^"]+)"?/);
       const filename = filenameMatch ? filenameMatch[1] : 'vehicle-qr.png';
@@ -96,12 +108,11 @@ const VehicleRegistration = () => {
       setLoading(false);
     }
   };
-  
 
   return (
-    <Box className="signin-box">
+    <Box style={formContainerStyle}>
       <Container maxWidth="xs">
-        <Paper className="signin-paper">
+        <Paper className="signin-paper" sx={{ p: 3 }}>
           <Typography variant="h4" component="h2" fontWeight="bold">
             Register Vehicle
           </Typography>

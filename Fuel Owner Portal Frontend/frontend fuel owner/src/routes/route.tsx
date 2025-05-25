@@ -11,6 +11,7 @@ import Operators from "../pages/Operators";
 import StationOwnerRegistration from "../pages/StationOwnerRegistration";
 import VehicleRegistration from "../pages/VehicleRegistration";
 import StationOperatorRegistration from "../pages/StationOperatorRegistration";
+import AddStockForm from "../pages/AddFuelStock";
 import VehicleOwnerDashboard from "../pages/VehicleOwnerDashboard";
 
 // Layouts
@@ -33,7 +34,9 @@ const Router: React.FC = () => {
         path="/vehicle-registration"
         element={<VehicleRegistration />}
       />
-      
+      <Route path="/vehicle-registration" element={<VehicleRegistration />} />
+
+      {/* Fuel Owner routes */}
 
       {/* Admin routes */}
       <Route
@@ -63,6 +66,7 @@ const Router: React.FC = () => {
         <Route path="/owner/dashboard" element={<FuelOwnerDashboard />} />
         <Route path="/owner/operators" element={<Operators />} />
         <Route path="/owner/vehicles" element={<VehicleRegistration />} />
+        <Route path="/owner/add-fuel-stock" element={<AddStockForm />} />
         <Route
           path="/owner/station-operator-registration"
           element={<StationOperatorRegistration />} />
