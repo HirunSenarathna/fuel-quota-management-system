@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface FuelStationRepository extends JpaRepository<FuelStation, Integer> {
     FuelStation findByStationOwner(Optional<FuelStationOwner> stationOwner);
 
+    FuelStation findByStationId(int stationId);
+
     boolean existsFuelStationByLicenseNumberAndCity(String licenseNumber, String city);
 
     @Query("SELECT new com.fqms.fuelquotamanagementsystem.Dtos.RemainingFuelQuantityForStations(" +

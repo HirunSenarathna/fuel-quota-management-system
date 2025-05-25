@@ -1,6 +1,7 @@
 import React from "react";
 import StatCard from "../../features/dashboard/StatCard";
 import FuelQuotaChart from "../../features/dashboard/FuelQuotaChart";
+import StationQuotaChart from "../../features/dashboard/StationQuotaChart";
 import { Row, Col, Typography } from "antd";
 
 const { Title } = Typography;
@@ -16,10 +17,10 @@ const Dashboard: React.FC = () => {
       <Row gutter={[16, 16]} justify="start">
         <Col xs={24} sm={12} md={8} lg={8} xl={8}>
           <StatCard
-            title="Total Users"
+            title="Total Registered Vehicles"
             value={1000}
             prefix={<span style={{ color: "#3f8600" }}>+</span>}
-            suffix="users"
+            suffix="Vehicles"
             precision={0}
             isPositive={true}
             loading={false}
@@ -29,10 +30,10 @@ const Dashboard: React.FC = () => {
 
         <Col xs={24} sm={12} md={8} lg={8} xl={8}>
           <StatCard
-            title="Total Quotas"
+            title="Total Fuel Dispensed"
             value={500}
             prefix={<span style={{ color: "#cf1322" }}>-</span>}
-            suffix="quotas"
+            suffix="liters"
             precision={0}
             isPositive={false}
             loading={false}
@@ -42,10 +43,10 @@ const Dashboard: React.FC = () => {
 
         <Col xs={24} sm={12} md={8} lg={8} xl={8}>
           <StatCard
-            title="Total Vehicles"
+            title="Total Registered Fuel Stations"
             value={200}
             prefix={<span style={{ color: "#3f8600" }}>+</span>}
-            suffix="vehicles"
+            suffix="stations"
             precision={0}
             isPositive={true}
             loading={false}
@@ -54,10 +55,13 @@ const Dashboard: React.FC = () => {
         </Col>
       </Row>
 
-      {/* Chart Row */}
+      {/* Chart Rows */}
       <Row gutter={[16, 16]} style={{ marginTop: "24px" }}>
-        <Col xs={24}>
-          <FuelQuotaChart title="Fuel Quota Remaining" />
+        <Col xs={24} md={12}>
+          <FuelQuotaChart title="Overall Fuel Quota" />
+        </Col>
+        <Col xs={24} md={12}>
+          <StationQuotaChart title="Station Fuel Quotas" />
         </Col>
       </Row>
     </div>
